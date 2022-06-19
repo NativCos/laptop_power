@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+import sys
 import datetime
 from model import Power
 from database import DBSession
@@ -33,7 +35,7 @@ class WhatTracking(enum.Flag):
 
 async def track(session, what_tracking=WhatTracking.ALL):
     delay = 1  # seconds
-    max_time_count = 10  # every seconds
+    max_time_count = 30  # every seconds
     max_time_count = max_time_count / delay
     time_count = 0
 
@@ -83,6 +85,7 @@ async def track(session, what_tracking=WhatTracking.ALL):
 
             await asyncio.sleep(delay)
     except asyncio.CancelledError:
+        session.commit()
         linux_power_now_file.close()
         linux_capacity_file.close()
         linux_status_file.close()

@@ -6,7 +6,7 @@ Base = declarative_base()
 
 
 class Power(Base):
-    """Информация и питании ноутбука"""
+    """Информация о питании ноутбука"""
     __tablename__ = 'power'
 
     class Status(enum.Enum):
