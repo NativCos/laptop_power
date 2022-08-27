@@ -20,6 +20,7 @@ class Power(Base):
     cycle_count = Column(INTEGER, nullable=True)
     energy_full = Column(INTEGER, nullable=True)
     energy_now = Column(INTEGER, nullable=True)
+    energy_full_design = Column(INTEGER, nullable=True)
 
     def __repr__(self):
         return f"<Power data={self.date}" \
@@ -28,9 +29,10 @@ class Power(Base):
                       f" capacity={self.capacity}>" \
                       f" cycle_count={self.cycle_count}>" \
                       f" energy_full={self.energy_full}>" \
-                      f" energy_now={self.energy_now}>"
+                      f" energy_now={self.energy_now}>" \
+                      f" energy_full_design={self.energy_full_design}>"
 
-    def __init__(self, date, power_now, status, capacity, cycle_count, energy_full, energy_now):
+    def __init__(self, date, power_now, status, capacity, cycle_count, energy_full, energy_now, energy_full_design):
         self.date = date
         self.power_now = power_now
         self.status = status
@@ -38,4 +40,5 @@ class Power(Base):
         self.cycle_count = cycle_count
         self.energy_full = energy_full
         self.energy_now = energy_now
+        self.energy_full_design = energy_full_design
 

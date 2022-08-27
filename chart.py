@@ -17,10 +17,9 @@ def get_data(session):
 def show_charts(data):
     YY = []
     for d in data:
-        YY.append(d.energy_now / pow(10, 6))
+        YY.append(d.power_now / pow(10, 6))
 
     window_size = 18
-    window_size = 1
     for i in range(len(YY) - window_size):
         YY[i] = np.mean(YY[i:i + window_size])
     YY = YY[0:len(YY) - window_size]
@@ -48,7 +47,7 @@ def calc_times(data):
 def main():
     data = get_data(DBSession())
     calc_times(data)
-    #show_charts(data)
+    show_charts(data)
 
 
 if __name__ == '__main__':
