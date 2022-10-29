@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import datetime
 from model import Power
 from database import DBSession, create_schema

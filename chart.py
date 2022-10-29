@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import plotly.graph_objects as go
 from database import DBSession
 from model import Power
