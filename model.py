@@ -16,6 +16,7 @@ class Power(Base):
     date = Column(DATETIME, primary_key=True)
     power_now = Column(INTEGER, nullable=True)
     status = Column(Enum(Status), nullable=True)
+    """str 'Discharging' or 'Charging'"""
     capacity = Column(INTEGER, nullable=True)
     cycle_count = Column(INTEGER, nullable=True)
     energy_full = Column(INTEGER, nullable=True)
