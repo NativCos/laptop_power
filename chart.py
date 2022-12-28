@@ -4,6 +4,11 @@ from database import DBSession
 from model import Power
 import datetime
 import numpy as np
+import logging
+
+_logger = logging.getLogger(__name__)
+_logger.setLevel(logging.DEBUG)
+_logger.addHandler(logging.StreamHandler())
 
 
 def get_data(session):
@@ -35,7 +40,7 @@ def calc_times(data):
     d_energy_now = data[0].energy_now - data[-1].energy_now
     speed = d_energy_now / time  # (seconds). Микро-Ват-Часы делятся на секунды. да-да... Я знаю
     if speed != 0:
-        if data[0].status == 'Discharging':
+        if data[0].status == Power.Status.Discharging:
             remaining_time_to_live = (data[-1].energy_now - (data[-1].energy_full * 6 / 100)) / speed
             """В строчке выше высчитывается оставшиеся время жизни батареи.
                Преполагается что батарея может разрядиться только до 6%.
@@ -49,22 +54,27 @@ def calc_times(data):
             print(f"{datetime_to_die.ctime()} time to die")
             print(f"{remaining_time_to_live} rest time to live in hours")
             print(f"{full_time_live} full time to live in hours")
-        elif data[0].status == 'Charging':
+        elif data[0].status == Power.Status.Charging:
+            speed = -speed
             remaining_time_to_done = (data[-1].energy_full - data[-1].energy_now) / speed
             datetime_to_done = datetime.datetime.now() + datetime.timedelta(seconds=remaining_time_to_done)
 
             print(f"Status: {data[0].status}")
             print(f"{datetime_to_done.ctime()} time to done")
             print(f"{datetime.timedelta(seconds=remaining_time_to_done)} rest time to done")
+        else:
+            print("WTF? unknow battary status...")
     elif speed == 0:
         print('Status: FULL')
 
 
 def main():
     data = get_data(DBSession())
+    _logger.debug(data[0])
     calc_times(data)
     show_charts(data)
 
 
 if __name__ == '__main__':
+    _logger.setLevel(logging.WARNING)
     main()
