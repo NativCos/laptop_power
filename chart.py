@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import plotly.graph_objects as go
 from database import DBSession
-from model import Power
+from model import Battery
 import datetime
 import numpy as np
 import logging
@@ -12,10 +12,10 @@ _logger.addHandler(logging.StreamHandler())
 
 
 def get_data(session):
-    time = 60 * 4  # 10 minutes
-    data = session.query(Power) \
-        .where(Power.date > datetime.datetime.now() - datetime.timedelta(seconds=time)) \
-        .order_by(Power.date) \
+    time = 60 * 10  # 10 minutes
+    data = session.query(Battery) \
+        .where(Battery.date > datetime.datetime.now() - datetime.timedelta(seconds=time)) \
+        .order_by(Battery.date) \
         .all()
     return data
 
@@ -40,7 +40,7 @@ def calc_times(data):
     d_energy_now = data[0].energy_now - data[-1].energy_now
     speed = d_energy_now / time  # (seconds). Микро-Ват-Часы делятся на секунды. да-да... Я знаю
     if speed != 0:
-        if data[0].status == Power.Status.Discharging:
+        if data[0].status == Battery.Status.Discharging:
             remaining_time_to_live = (data[-1].energy_now - (data[-1].energy_full * 6 / 100)) / speed
             """В строчке выше высчитывается оставшиеся время жизни батареи.
                Преполагается что батарея может разрядиться только до 6%.
@@ -54,7 +54,7 @@ def calc_times(data):
             print(f"{datetime_to_die.ctime()} time to die")
             print(f"{remaining_time_to_live} rest time to live in hours")
             print(f"{full_time_live} full time to live in hours")
-        elif data[0].status == Power.Status.Charging:
+        elif data[0].status == Battery.Status.Charging:
             speed = -speed
             remaining_time_to_done = (data[-1].energy_full - data[-1].energy_now) / speed
             datetime_to_done = datetime.datetime.now() + datetime.timedelta(seconds=remaining_time_to_done)

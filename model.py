@@ -5,9 +5,9 @@ import enum
 Base = declarative_base()
 
 
-class Power(Base):
-    """Информация о питании ноутбука"""
-    __tablename__ = 'power'
+class Battery(Base):
+    """Информация о питании батареи ноутбука"""
+    __tablename__ = 'battery'
 
     class Status(enum.Enum):
         Charging = 0
@@ -24,7 +24,7 @@ class Power(Base):
     energy_full_design = Column(INTEGER, nullable=True)
 
     def __repr__(self):
-        return f"<Power data={self.date}" \
+        return f"<Battery data={self.date}" \
                       f" power_now={self.power_now}" \
                       f" status={self.status}" \
                       f" capacity={self.capacity}>" \
