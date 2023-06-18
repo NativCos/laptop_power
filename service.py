@@ -1,12 +1,95 @@
 import datetime
 import time
-
 from model import Battery
-import os
+
+
+class IntelPStateDriver:
+    """intel P-state scaling driver that realization Intel SpeedStep Technology"""
+
+    class speedShift:
+        """Intel SpeedShift aka Hardware P-states.
+        У меня не работает почему-то. нет эффекта."""
+        @staticmethod
+        def enable(self):
+            with open('/sys/devices/system/cpu/intel_pstate/hwp_dynamic_boost', 'wt') as f:
+                f.write('1')
+
+        @staticmethod
+        def get(self):
+            with open('/sys/devices/system/cpu/intel_pstate/hwp_dynamic_boost', 'rt') as f:
+                return bool(f.read())
+
+        @staticmethod
+        def disable(self):
+            with open('/sys/devices/system/cpu/intel_pstate/hwp_dynamic_boost', 'wt') as f:
+                f.write('0')
+
+    class turboPstates:
+        """Intel allow p_state drive set CPU to turbo P states.
+        Изменять бессмысленно."""
+
+        @staticmethod
+        def enable(self):
+            with open('/sys/devices/system/cpu/intel_pstate/no_turbo', 'wt') as f:
+                f.write('1')
+
+        @staticmethod
+        def get(self):
+            with open('/sys/devices/system/cpu/intel_pstate/no_turbo', 'rt') as f:
+                return bool(f.read())
+
+        @staticmethod
+        def disable(self):
+            with open('/sys/devices/system/cpu/intel_pstate/no_turbo', 'wt') as f:
+                f.write('0')
+
+
+class CpuFrequency:
+    """Управление частотами ядер процессора"""
+    cpu = ()
+    _cpu_id = None
+
+    def __init__(self):
+        pass
+
+    def get_scaling_max_freq(self):
+        """ Безполезно.
+        :return: КИЛЛОГЕРЦЫ 10**3
+        """
+        with open(f'/sys/devices/system/cpu/cpu{self._cpu_id}/cpufreq/scaling_max_freq', 'rt') as f:
+            return int(f.read())
+
+    def get_scaling_min_freq(self):
+        """ Безполезно.
+        :return: КИЛЛОГЕРЦЫ 10**3
+        """
+        with open(f'/sys/devices/system/cpu/cpu{self._cpu_id}/cpufreq/scaling_min_freq', 'rt') as f:
+            return int(f.read())
+
+    def get_scaling_cur_freq(self):
+        """
+        :return: КИЛЛОГЕРЦЫ 10**3
+        """
+        with open(f'/sys/devices/system/cpu/cpu{self._cpu_id}/cpufreq/scaling_cur_freq', 'rt') as f:
+            return int(f.read())
+
+    def get_scaling_available_governors(self):
+        """
+        :return: list
+        """
+        with open(f'/sys/devices/system/cpu/cpu{self._cpu_id}/cpufreq/scaling_available_governors', 'rt') as f:
+            return f.read().replace('\n','').split(' ')
+
+    def set_scaling_governor(self, governor: str):
+        """
+        :param governor: see CpuFrequency.get_scaling_available_governors
+        """
+        with open(f'/sys/devices/system/cpu/cpu{self._cpu_id}/cpufreq/scaling_available_governors', 'wt') as f:
+            return f.write(governor)
 
 
 class Constraint:
-    """Ограничение пакета RAPL. Описаны не все. Только обязательные"""
+    """Ограничение пакета RAPL. Описаны не все параметры. Только обязательные."""
     name = None
 
     def __init__(self, sysfsMasterPackage, id):
@@ -61,10 +144,10 @@ class ConstraintShortTerm(Constraint):
 class IntelPowerCappingFramework:
     """Интеловский фреймворк управления питанием их процессоров.
         Intel "Running Average Power Limit" (RAPL) technology
+        Мы будем управлять только всем пакетом (core, outcore, dram)
     """
     _SYSFS_MASTER_PACKAGE_MSR = '/sys/devices/virtual/powercap/intel-rapl/intel-rapl:0'
     _SYSFS_MASTER_PACKAGE_MMIO = '/sys/devices/virtual/powercap/intel-rapl-mmio/intel-rapl-mmio:0'
-    """Мы будем управлять только всем пакетом (core, outcore, dram)"""
 
     _linux_energy_uj_file = None
 
@@ -81,7 +164,6 @@ class IntelPowerCappingFramework:
         self.mmio = lambda: None
         setattr(self.mmio, 'long_term', ConstraintLongTerm(self._SYSFS_MASTER_PACKAGE_MMIO))
         setattr(self.mmio, 'short_term', ConstraintShortTerm(self._SYSFS_MASTER_PACKAGE_MMIO))
-
 
     def get_energy_uj(self):
         """"Текущие значение счётчика энергии.
@@ -104,7 +186,9 @@ class IntelPowerCappingFramework:
             return True if '1' in f.read() else False
 
     def get_current_watts(self, time_interval=1):
-        """ В этом верменном промежутке была средняя мощьность"""
+        """ В этом верменном промежутке была средняя мощьность
+        :param time_interval int СЕКУНДЫ
+        :return: float МИКРОВАТТ"""
         if time_interval <= 0:
             raise ValueError("time_interval <= 0 is meaninglessly")
         before = self.get_energy_uj()
