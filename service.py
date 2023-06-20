@@ -1,6 +1,42 @@
+# подсветка клавиатуры потребляет 0.5 Ватт и 1.0 Ватт
+# экран потребляет 3,6 ВАтт на 100%
+# wireless почти не тратит энергию
 import datetime
 import time
 from model import Battery
+
+
+def calc_times(data):
+    time = (data[-1].date - data[0].date).seconds
+    d_energy_now = data[0].energy_now - data[-1].energy_now
+    speed = d_energy_now / time  # (seconds). Микро-Ват-Часы делятся на секунды. да-да... Я знаю
+    if speed != 0:
+        if data[0].status == Battery.Status.Discharging:
+            remaining_time_to_live = (data[-1].energy_now - (data[-1].energy_full * 6 / 100)) / speed
+            """В строчке выше высчитывается оставшиеся время жизни батареи.
+               Преполагается что батарея может разрядиться только до 6%.
+               formula: (<энергии сейчас> - <6% от полной емкости>) / <скорость разрядки>"""
+            datetime_to_die = datetime.datetime.now() + datetime.timedelta(seconds=remaining_time_to_live)
+            remaining_time_to_live = datetime.timedelta(seconds=remaining_time_to_live)
+            full_time_live = data[0].energy_full / speed
+            full_time_live = datetime.timedelta(seconds=full_time_live)
+
+            print(f"Status: {data[0].status}")
+            print(f"{datetime_to_die.ctime()} time to die")
+            print(f"{remaining_time_to_live} rest time to live in hours")
+            print(f"{full_time_live} full time to live in hours")
+        elif data[0].status == Battery.Status.Charging:
+            speed = -speed
+            remaining_time_to_done = (data[-1].energy_full - data[-1].energy_now) / speed
+            datetime_to_done = datetime.datetime.now() + datetime.timedelta(seconds=remaining_time_to_done)
+
+            print(f"Status: {data[0].status}")
+            print(f"{datetime_to_done.ctime()} time to done")
+            print(f"{datetime.timedelta(seconds=remaining_time_to_done)} rest time to done")
+        else:
+            print("WTF? unknow battary status...")
+    elif speed == 0:
+        print('Status: FULL')
 
 
 class IntelPStateDriver:
@@ -8,7 +44,14 @@ class IntelPStateDriver:
 
     class speedShift:
         """Intel SpeedShift aka Hardware P-states.
-        У меня не работает почему-то. нет эффекта."""
+        У меня не работает почему-то. нет эффекта.
+        Если включено, то P состояниями управляет процессор а не драйвер и
+        для контроля производительности процессора нужно крутить:
+            /sys/devices/system/cpu/cpu*/energy_performance_preference
+            /sys/devices/system/cpu/cpu*/energy_performance_available_preferences
+        там словами пишешь (универсально для всех процессоров не только intel)
+        или же крутить напрямую intel крутилку производительности:
+            /sys/devices/system/cpu/cpu*/power/energy_perf_bias"""
         @staticmethod
         def enable(self):
             with open('/sys/devices/system/cpu/intel_pstate/hwp_dynamic_boost', 'wt') as f:
@@ -26,7 +69,8 @@ class IntelPStateDriver:
 
     class turboPstates:
         """Intel allow p_state drive set CPU to turbo P states.
-        Изменять бессмысленно."""
+        Изменять бессмысленно.
+        Позволять ли драйверу переходить в драйв P states."""
 
         @staticmethod
         def enable(self):
@@ -43,14 +87,48 @@ class IntelPStateDriver:
             with open('/sys/devices/system/cpu/intel_pstate/no_turbo', 'wt') as f:
                 f.write('0')
 
+    @staticmethod
+    def get_energy_perf_bias_for_all_cpu() -> int:
+        with open('/sys/devices/system/cpu/cpu*/power/energy_perf_bias', 'rt') as f:
+            return int(f.read())
+
+    @staticmethod
+    def set_energy_perf_bias_for_all_cpu(epb: int):
+        """The Intel performance and energy bias hint (EPB) is an interface provided by Intel CPUs
+        to allow for user space to specify the desired power-performance tradeoff,
+        on a scale of 0 (highest performance) to 15 (highest energy savings).
+        :param epb: int 0 (highest performance) to 15 (highest energy savings).
+        """
+        if epb < 0 or epb >= 15:
+            raise ValueError('epb: int 0 (highest performance) to 15 (highest energy savings).')
+        with open('/sys/devices/system/cpu/possible', 'rt') as f:
+            start_id, stop_id = f.read().replace('\n', '').split('-')
+            start_id, stop_id = int(start_id), int(stop_id)
+        for id in range(start_id, stop_id + 1):
+            with open(f"/sys/devices/system/cpu/cpu{id}/power/energy_perf_bias", 'wt') as f:
+                f.write(str(epb))
+
 
 class CpuFrequency:
     """Управление частотами ядер процессора"""
-    cpu = ()
+    cpu = []
     _cpu_id = None
 
-    def __init__(self):
-        pass
+    def __init__(self, cpu_id=None):
+        if cpu_id is None:
+            with open('/sys/devices/system/cpu/possible', 'rt') as f:
+                start_id, stop_id = f.read().replace('\n', '').split('-')
+                start_id, stop_id = int(start_id), int(stop_id)
+            for id in range(start_id, stop_id + 1):
+                self.cpu.append(CpuFrequency(id))
+            self.cpu = tuple(self.cpu)
+        else:
+            self._cpu_id = cpu_id
+
+    def get_driver_name(self):
+        """лучше чтобы было intel_pstate"""
+        with open(f'/sys/devices/system/cpu/cpu{self._cpu_id}/cpufreq/scaling_driver', 'rt') as f:
+            return f.read().replace('\n', '')
 
     def get_scaling_max_freq(self):
         """ Безполезно.

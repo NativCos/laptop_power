@@ -26,7 +26,11 @@ async def track(session):
         del batteryservice
 
 
+async def main():
+    db_session = DBSession()
+    await track(db_session)
+
 if __name__ == '__main__':
-    asyncio.run(track(DBSession()))
+    asyncio.run(main())
 
 

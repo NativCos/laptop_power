@@ -2,6 +2,7 @@
 import plotly.graph_objects as go
 from database import DBSession
 from model import Battery
+from service import calc_times
 import datetime
 import numpy as np
 import logging
@@ -33,39 +34,6 @@ def show_charts(data):
     fig = go.Figure()
     fig.add_scatter(x=XX, y=YY)
     fig.show()
-
-
-def calc_times(data):
-    time = (data[-1].date - data[0].date).seconds
-    d_energy_now = data[0].energy_now - data[-1].energy_now
-    speed = d_energy_now / time  # (seconds). Микро-Ват-Часы делятся на секунды. да-да... Я знаю
-    if speed != 0:
-        if data[0].status == Battery.Status.Discharging:
-            remaining_time_to_live = (data[-1].energy_now - (data[-1].energy_full * 6 / 100)) / speed
-            """В строчке выше высчитывается оставшиеся время жизни батареи.
-               Преполагается что батарея может разрядиться только до 6%.
-               formula: (<энергии сейчас> - <6% от полной емкости>) / <скорость разрядки>"""
-            datetime_to_die = datetime.datetime.now() + datetime.timedelta(seconds=remaining_time_to_live)
-            remaining_time_to_live = datetime.timedelta(seconds=remaining_time_to_live)
-            full_time_live = data[0].energy_full / speed
-            full_time_live = datetime.timedelta(seconds=full_time_live)
-
-            print(f"Status: {data[0].status}")
-            print(f"{datetime_to_die.ctime()} time to die")
-            print(f"{remaining_time_to_live} rest time to live in hours")
-            print(f"{full_time_live} full time to live in hours")
-        elif data[0].status == Battery.Status.Charging:
-            speed = -speed
-            remaining_time_to_done = (data[-1].energy_full - data[-1].energy_now) / speed
-            datetime_to_done = datetime.datetime.now() + datetime.timedelta(seconds=remaining_time_to_done)
-
-            print(f"Status: {data[0].status}")
-            print(f"{datetime_to_done.ctime()} time to done")
-            print(f"{datetime.timedelta(seconds=remaining_time_to_done)} rest time to done")
-        else:
-            print("WTF? unknow battary status...")
-    elif speed == 0:
-        print('Status: FULL')
 
 
 def main():
