@@ -30,18 +30,18 @@ class PlotViewer(QtWidgets.QWidget):
         self.intelrapl = IntelPowerCappingFramework()
         self.buffer = RingBuffer(30)
         self.buffer.fill_by_object(0)
-        self.interval = 1000
+        self.interval = 1
 
         self.refrash()
         self.timer = QTimer()
         self.timer.timeout.connect(self.refrash)
-        self.timer.start(self.interval)
+        self.timer.start(self.interval*1000)
 
     def refrash(self):
         # create an axis
-        x = range(30)
-        self.buffer.append(self.intelrapl.get_current_watts(self.interval/1000))
-        y = self.buffer.get_last(30)
+        x = range(self.buffer.size)
+        self.buffer.append(self.intelrapl.get_current_watts(self.interval) / float(10**6))
+        y = self.buffer.get_last(self.buffer.size)
 
         self.figure.canvas.draw()
         self.figure.canvas.flush_events()

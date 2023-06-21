@@ -5,6 +5,10 @@ class RingBuffer:
     _head_index = 0
     _size = 0
 
+    @property
+    def size(self):
+        return self._size
+
     def __init__(self, size):
         self._size = size
         for _ in range(size):
