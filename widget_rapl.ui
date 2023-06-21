@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>657</width>
-    <height>435</height>
+    <width>699</width>
+    <height>640</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -192,6 +192,18 @@
             </item>
             <item row="3" column="2">
              <widget class="QLCDNumber" name="lcdNumber_mmio_pl1">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>40</height>
+               </size>
+              </property>
               <property name="smallDecimalPoint">
                <bool>true</bool>
               </property>
@@ -255,6 +267,18 @@
             </item>
             <item row="2" column="2">
              <widget class="QLCDNumber" name="lcdNumber_msr_pl1">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>40</height>
+               </size>
+              </property>
               <property name="smallDecimalPoint">
                <bool>true</bool>
               </property>
@@ -338,6 +362,18 @@
             </item>
             <item row="3" column="9">
              <widget class="QLCDNumber" name="lcdNumber_mmio_pl2tw">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>40</height>
+               </size>
+              </property>
               <property name="smallDecimalPoint">
                <bool>true</bool>
               </property>
@@ -385,6 +421,18 @@
             </item>
             <item row="3" column="7">
              <widget class="QLCDNumber" name="lcdNumber_mmio_pl2">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>40</height>
+               </size>
+              </property>
               <property name="smallDecimalPoint">
                <bool>true</bool>
               </property>
@@ -432,6 +480,18 @@
             </item>
             <item row="3" column="4">
              <widget class="QLCDNumber" name="lcdNumber_mmio_pl1tw">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>40</height>
+               </size>
+              </property>
               <property name="smallDecimalPoint">
                <bool>true</bool>
               </property>
@@ -539,6 +599,18 @@
             </item>
             <item row="2" column="7">
              <widget class="QLCDNumber" name="lcdNumber_msr_pl2">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>40</height>
+               </size>
+              </property>
               <property name="smallDecimalPoint">
                <bool>true</bool>
               </property>
@@ -555,6 +627,18 @@
             </item>
             <item row="2" column="9">
              <widget class="QLCDNumber" name="lcdNumber_msr_pl2tw">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>40</height>
+               </size>
+              </property>
               <property name="smallDecimalPoint">
                <bool>true</bool>
               </property>
@@ -571,6 +655,18 @@
             </item>
             <item row="2" column="4">
              <widget class="QLCDNumber" name="lcdNumber_msr_pl1tw">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>40</height>
+               </size>
+              </property>
               <property name="smallDecimalPoint">
                <bool>true</bool>
               </property>

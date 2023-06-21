@@ -1,11 +1,59 @@
 #!/usr/bin/env python3
-import sys
-from PyQt6 import uic, QtWidgets
+from PyQt6 import uic
 from PyQt6.QtWidgets import QApplication, QWidget
-from PyQt6.QtCore import QTimer, Qt
+from PyQt6.QtCore import Qt
+import sys
+from PyQt6 import QtWidgets, QtCore
+from PyQt6.QtCore import QTimer
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+import matplotlib.pyplot as plt
+import logging
 
 from service import IntelPowerCappingFramework
-from chart_qt import PlotViewer
+from utils import RingBuffer
+
+
+_logger = logging.getLogger(__name__)
+_logger.setLevel(logging.DEBUG)
+_logger.addHandler(logging.StreamHandler())
+
+
+class PlotViewer(QtWidgets.QWidget):
+
+    doubleClickAction = QtCore.pyqtSignal(str)
+
+    def __init__(self, parent=None):
+        super(PlotViewer, self).__init__(parent)
+
+        self.figure = plt.figure(figsize=(5, 5))
+        self.figureCanvas = FigureCanvas(self.figure)
+
+        layout = QtWidgets.QVBoxLayout()
+        layout.addWidget(self.figureCanvas)
+        self.setLayout(layout)
+
+        self.intelrapl = IntelPowerCappingFramework()
+        self.buffer = RingBuffer(30)
+        self.buffer.fill_by_object(0)
+        self.interval = 3
+
+        self.refrash()
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.refrash)
+        self.timer.start(self.interval*1000)
+
+    def refrash(self):
+        x = range(self.buffer.size)
+        w = self.intelrapl.get_current_watts(self.interval) / float(10 ** 6)
+        self.buffer.append(w)
+        y = self.buffer.get_last(self.buffer.size)
+
+        ax = self.figure.add_subplot(111)
+        ax.plot(x, y, linewidth=2.0)
+        ax.set(xlabel='time (s)', ylabel='Watts', ylim=(0, 30))
+        ax.grid()
+        self.figure.canvas.draw()
+        self.figure.canvas.flush_events()
 
 
 class RAPLWidget(QWidget):
