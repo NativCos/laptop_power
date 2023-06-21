@@ -64,7 +64,7 @@ class IntelPStateDriver:
             /sys/devices/system/cpu/cpu*/power/energy_perf_bias"""
         @staticmethod
         def enable():
-            if os.getuid() != '0':  # is not "root' user
+            if os.getuid() != 0:  # is not "root' user
                 dbus_proxy.GetDBusInterfaceProxyOf().Speedshift.Enable()
                 return
             with open('/sys/devices/system/cpu/intel_pstate/hwp_dynamic_boost', 'wt') as f:
@@ -77,7 +77,7 @@ class IntelPStateDriver:
 
         @staticmethod
         def disable():
-            if os.getuid() != '0':  # is not "root' user
+            if os.getuid() != 0:  # is not "root' user
                 dbus_proxy.GetDBusInterfaceProxyOf().Speedshift.Disable()
                 return
             with open('/sys/devices/system/cpu/intel_pstate/hwp_dynamic_boost', 'wt') as f:
@@ -90,7 +90,7 @@ class IntelPStateDriver:
 
         @staticmethod
         def enable():
-            if os.getuid() != '0':  # is not "root' user
+            if os.getuid() != 0:  # is not "root' user
                 dbus_proxy.GetDBusInterfaceProxyOf().Turbopstates.Enable()
                 return
             with open('/sys/devices/system/cpu/intel_pstate/no_turbo', 'wt') as f:
@@ -103,7 +103,7 @@ class IntelPStateDriver:
 
         @staticmethod
         def disable():
-            if os.getuid() != '0':  # is not "root' user
+            if os.getuid() != 0:  # is not "root' user
                 dbus_proxy.GetDBusInterfaceProxyOf().Turbopstates.Disable()
                 return
             with open('/sys/devices/system/cpu/intel_pstate/no_turbo', 'wt') as f:
@@ -121,7 +121,7 @@ class IntelPStateDriver:
         on a scale of 0 (highest performance) to 15 (highest energy savings).
         :param epb: int 0 (highest performance) to 15 (highest energy savings).
         """
-        if os.getuid() != '0':  # is not "root' user
+        if os.getuid() != 0:  # is not "root' user
             dbus_proxy.GetDBusInterfaceProxyOf().Intelpstatedriver.SetEnergyPerfBiasForAllCpu(epb)
             return
         if epb < 0 or epb >= 15:
@@ -187,7 +187,7 @@ class CpuFrequency:
         """
         :param governor: see CpuFrequency.get_scaling_available_governors
         """
-        if os.getuid() != '0':  # is not "root' user
+        if os.getuid() != 0:  # is not "root' user
             dbus_proxy.GetDBusInterfaceProxyOf().Cpufrequency.SetScalingGovernor(governor)
             return
         with open(f'/sys/devices/system/cpu/cpu{self._cpu_id}/cpufreq/scaling_available_governors', 'wt') as f:
@@ -218,7 +218,7 @@ class Constraint:
         :param power_limit_uw: int МИКРОВАТТЫ
         """
         # TODO: спагетти код. впихнул авторизацию в логику. была обстракция от типа Constraint, а Я опять впихнул
-        if os.getuid() != '0':  # is not "root' user
+        if os.getuid() != 0:  # is not "root' user
             if self._id == 0:
                 dbus_proxy.GetDBusInterfaceProxyOf().Constraintlongterm.SetPowerLimitUw(power_limit_uw)
                 return
@@ -240,7 +240,7 @@ class Constraint:
         :param time_window_us: int МИКРОСЕКУНДЫ
         """
         # TODO: спагетти код. впихнул авторизацию в логику. была обстракция от типа Constraint, а Я опять впихнул
-        if os.getuid() != '0':  # is not "root' user
+        if os.getuid() != 0:  # is not "root' user
             if self._id == 0:
                 dbus_proxy.GetDBusInterfaceProxyOf().Constraintlongterm.SetTimeWindowUs(time_window_us)
                 return
@@ -291,22 +291,21 @@ class IntelPowerCappingFramework:
         """"Текущие значение счётчика энергии.
         :return: int МИКРОДЖОУЛЯХ
         """
-        if os.getuid() != '0':  # is not "root' user
+        if os.getuid() != 0:  # is not "root' user
             return dbus_proxy.GetDBusInterfaceProxyOf().Intelpowercappingframework.GetEnergyUj()
         if hasattr(self, '_linux_energy_uj_file'):
             self._linux_energy_uj_file = open(self._SYSFS_MASTER_PACKAGE_MSR + '/energy_uj', 'rt')
         return int(self._linux_energy_uj_file.read())
 
     def disable_mmio_rapl(self):
-        _logger.debug(f'U name is {os.getuid()}')
-        if os.getuid() != '0':  # is not "root' user
-            #dbus_proxy.GetDBusInterfaceProxyOf().Intelpowercappingframework.DisableMmioRapl()
+        if os.getuid() != 0:  # is not "root' user
+            dbus_proxy.GetDBusInterfaceProxyOf().Intelpowercappingframework.DisableMmioRapl()
             return
         with open(f'{self._SYSFS_MASTER_PACKAGE_MMIO}/enabled', 'wt') as f:
             f.write(str(0))
 
     def enable_mmio_rapl(self):
-        if os.getuid() != '0':  # is not "root' user
+        if os.getuid() != 0:  # is not "root' user
             dbus_proxy.GetDBusInterfaceProxyOf().Intelpowercappingframework.EnableMmioRapl()
             return
         with open(f'{self._SYSFS_MASTER_PACKAGE_MMIO}/enabled', 'wt') as f:
@@ -320,7 +319,7 @@ class IntelPowerCappingFramework:
         """ В этом верменном промежутке была средняя мощьность
         :param time_interval int СЕКУНДЫ
         :return: float МИКРОВАТТ"""
-        if os.getuid() != '0':  # is not "root' user
+        if os.getuid() != 0:  # is not "root' user
             return dbus_proxy.GetDBusInterfaceProxyOf().Intelpowercappingframework.GetCurrentWatts()
         if time_interval <= 0:
             raise ValueError("time_interval <= 0 is meaninglessly")
