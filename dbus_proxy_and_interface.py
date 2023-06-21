@@ -105,30 +105,30 @@ class GetDBusInterfaceProxyOf:
 
     @property
     def Intelpstatedriver(self):
-        InterfaceProxy(self.bus, DBUS_SERVICE_NAME, Intelpstatedriver.OBJECT_PATH, Intelpstatedriver.OBJECT_INTERFACE)
+        return InterfaceProxy(self.bus, DBUS_SERVICE_NAME, Intelpstatedriver.OBJECT_PATH, Intelpstatedriver.OBJECT_INTERFACE)
 
     @property
     def Speedshift(self):
-        InterfaceProxy(self.bus, DBUS_SERVICE_NAME, Speedshift.OBJECT_PATH, Speedshift.OBJECT_INTERFACE)
+        return InterfaceProxy(self.bus, DBUS_SERVICE_NAME, Speedshift.OBJECT_PATH, Speedshift.OBJECT_INTERFACE)
 
     @property
     def Turbopstates(self):
-        InterfaceProxy(self.bus, DBUS_SERVICE_NAME, Turbopstates.OBJECT_PATH, Turbopstates.OBJECT_INTERFACE)
+        return InterfaceProxy(self.bus, DBUS_SERVICE_NAME, Turbopstates.OBJECT_PATH, Turbopstates.OBJECT_INTERFACE)
 
     @property
     def Cpufrequency(self):
-        InterfaceProxy(self.bus, DBUS_SERVICE_NAME, Cpufrequency.OBJECT_PATH, Cpufrequency.OBJECT_INTERFACE)
+        return InterfaceProxy(self.bus, DBUS_SERVICE_NAME, Cpufrequency.OBJECT_PATH, Cpufrequency.OBJECT_INTERFACE)
 
     @property
     def Intelpowercappingframework(self):
-        InterfaceProxy(self.bus, DBUS_SERVICE_NAME, Intelpowercappingframework.OBJECT_PATH,
+        return InterfaceProxy(self.bus, DBUS_SERVICE_NAME, Intelpowercappingframework.OBJECT_PATH,
                        Intelpowercappingframework.OBJECT_INTERFACE)
 
     @property
     def Constraintlongterm(self):
-        InterfaceProxy(self.bus, DBUS_SERVICE_NAME, Constraintlongterm.OBJECT_PATH, Constraintlongterm.OBJECT_INTERFACE)
+        return InterfaceProxy(self.bus, DBUS_SERVICE_NAME, Constraintlongterm.OBJECT_PATH, Constraintlongterm.OBJECT_INTERFACE)
 
     @property
     def Constraintshortterm(self):
-        InterfaceProxy(self.bus, DBUS_SERVICE_NAME, Constraintshortterm.OBJECT_PATH,
+        return InterfaceProxy(self.bus, DBUS_SERVICE_NAME, Constraintshortterm.OBJECT_PATH,
                        Constraintshortterm.OBJECT_INTERFACE)
