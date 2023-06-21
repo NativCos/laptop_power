@@ -103,7 +103,7 @@
    <item>
     <widget class="QStackedWidget" name="stackedWidget_rapl">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="rapl">
       <layout class="QHBoxLayout" name="horizontalLayout_2">
