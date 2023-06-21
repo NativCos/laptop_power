@@ -260,8 +260,12 @@ class IntelPowerCappingFramework:
         setattr(self.mmio, 'short_term', ConstraintShortTerm(self._SYSFS_MASTER_PACKAGE_MMIO))
 
         self.energy_uj_buffer_by_seconds = RingBuffer(2)
+        def update_energy_uj():
+            while True:
+                self.energy_uj_buffer_by_seconds.append(self.get_energy_uj())
+                time.sleep(1.0)
         threading.Thread(daemon=True,
-                         target=lambda: self.energy_uj_buffer_by_seconds.append(self.get_energy_uj()) and time.sleep(1.0)
+                         target=update_energy_uj
                          ).start()
 
     def get_energy_uj(self):

@@ -29,5 +29,3 @@ class RingBuffer:
             return self._buffer[self._head_index - index]
         else:
             return self._buffer[self._size - (index - self._head_index)]
-
-
