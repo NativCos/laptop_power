@@ -87,6 +87,11 @@ class RAPLWidget(QWidget):
 
 
     def rapl_refresh(self):
+        self.lcdNumber_watts.display(
+            str(
+                self.raplservice.get_current_watts() / float(10 ** 6)
+            )
+        )
         self.lcdNumber_msr_pl1.display(
             str(
                 self.raplservice.long_term.get_power_limit_uw() / float(10 ** 6)

@@ -286,7 +286,7 @@ class IntelPowerCappingFramework:
         :param time_interval int СЕКУНДЫ
         :return: float МИКРОВАТТ"""
         if os.getuid() != 0:  # is not "root' user
-            return dbus_proxy.GetDBusInterfaceProxyOf().Intelpowercappingframework.GetCurrentWatts()
+            return float(dbus_proxy.GetDBusInterfaceProxyOf().Intelpowercappingframework.GetCurrentWatts())
         if time_interval <= 0:
             raise ValueError("time_interval <= 0 is meaninglessly")
         before = self.get_energy_uj()

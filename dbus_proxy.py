@@ -77,6 +77,7 @@ class Intelpowercappingframework:
         service.IntelPowerCappingFramework().enable_mmio_rapl()
 
     def GetCurrentWatts(self) -> Str:
+        # TODO не умею через dbus передавать double
         return str(service.IntelPowerCappingFramework().get_current_watts())
 
 
