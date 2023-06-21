@@ -3,17 +3,14 @@
 """
 import grp
 import os
-import time
-
-from dasbus.client.observer import DBusObserver
+import logging
 from dasbus.server.interface import dbus_interface, dbus_signal
-from dasbus.connection import SystemMessageBus, SessionMessageBus
+from dasbus.connection import SystemMessageBus
 from dasbus.client.proxy import InterfaceProxy
 from dasbus.typing import Str, Int, Double, Bool
-from dbus import SystemBus
 
 import service
-import logging
+
 
 DBUS_SERVICE_NAME = "world.nkt.laptoppower"
 

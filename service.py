@@ -3,7 +3,6 @@
 # wireless почти не тратит энергию
 import datetime
 import os
-import pwd
 import time
 import logging
 

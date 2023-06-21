@@ -5,24 +5,17 @@
 Предоставляет доступ к информации об энергопотреблении ноутбука.
 """
 import time
-from dasbus.connection import SystemMessageBus, SessionMessageBus
-from dasbus.server.interface import dbus_interface, dbus_signal
-from dasbus.server.container import DBusContainer
-from dasbus.typing import Str, Int, Double, Bool
+from dasbus.connection import SystemMessageBus
 from dasbus.loop import EventLoop as DasBusEventLoop
 import threading
 import logging
 
-import service
 import dbus_proxy
+
 
 _logger = logging.getLogger(__name__)
 _logger.setLevel(logging.DEBUG)
 _logger.addHandler(logging.StreamHandler())
-
-
-DBUS_OBJECT_NAME = ""
-DBUS_INTERFACE_NAME = ""
 
 
 def my_loop():
