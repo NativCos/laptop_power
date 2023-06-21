@@ -111,7 +111,7 @@ class GetDBusInterfaceProxyOf:
         self.bus = SystemMessageBus()
         try:
             InterfaceProxy(self.bus, DBUS_SERVICE_NAME, Intelpstatedriver.OBJECT_PATH,
-                           Intelpstatedriver.OBJECT_INTERFACE)
+                           Intelpstatedriver.OBJECT_INTERFACE).Test()
         except:
             msg = "can't connect to bus and take a proxy"
             _logger.error(msg)

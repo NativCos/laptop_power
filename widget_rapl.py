@@ -36,6 +36,9 @@ class RAPLWidget(QWidget):
         self.raplservice.short_term.set_power_limit_uw(int(self.doubleSpinBox_msr_pl2.value() * float(10 ** 6)))
         self.raplservice.short_term.set_time_window_us(int(self.doubleSpinBox_msr_pl2tw.value() * float(10 ** 6)))
 
+        self.stackedWidget_button.setCurrentIndex(0)
+        self.stackedWidget_rapl.setCurrentIndex(0)
+
     def pushButton_cancel_clicked(self):
         self.stackedWidget_button.setCurrentIndex(0)
         self.stackedWidget_rapl.setCurrentIndex(0)
