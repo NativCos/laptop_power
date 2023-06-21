@@ -80,9 +80,9 @@ class Intelpowercappingframework:
     def EnableMmioRapl(self):
         self.ipowerframe.enable_mmio_rapl()
 
-    def GetCurrentWatts(self, interval: Int) -> Str:
+    def GetCurrentWatts(self, time_interval: Int) -> Str:
         # TODO не умею через dbus передавать double
-        return str(self.ipowerframe.get_current_watts(int(interval)))
+        return str(self.ipowerframe.get_current_watts(int(time_interval)))
 
 
 @dbus_interface("world.nkt.laptoppower.intelpowercappingframework.long_term")
