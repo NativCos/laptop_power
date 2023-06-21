@@ -1,0 +1,3 @@
+create system group 'laptoppower' that can allow to dbus
+
+put file world.nkt.laptopwer.conf to /etc/dbus-1/system.d/world.nkt.laptoppower.conf
