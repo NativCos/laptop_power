@@ -14,7 +14,7 @@ import threading
 import logging
 
 import service
-import dbus_proxy_and_interface
+import dbus_proxy
 
 _logger = logging.getLogger(__name__)
 _logger.setLevel(logging.DEBUG)
@@ -26,25 +26,22 @@ DBUS_INTERFACE_NAME = ""
 
 
 def my_loop():
-    try:
-        while True:
-            pass
-    except KeyboardInterrupt:
-        return
+    while True:
+        time.sleep(1.0)
 
 
 def main():
     bus = SystemMessageBus()
-    bus.register_service(dbus_proxy_and_interface.DBUS_SERVICE_NAME)
+    bus.register_service(dbus_proxy.DBUS_SERVICE_NAME)
 
     objs = [
-        dbus_proxy_and_interface.Intelpstatedriver(),
-        dbus_proxy_and_interface.Turbopstates(),
-        dbus_proxy_and_interface.Speedshift(),
-        dbus_proxy_and_interface.Cpufrequency(),
-        dbus_proxy_and_interface.Intelpowercappingframework(),
-        dbus_proxy_and_interface.Constraintlongterm(),
-        dbus_proxy_and_interface.Constraintshortterm(),
+        dbus_proxy.Intelpstatedriver(),
+        dbus_proxy.Turbopstates(),
+        dbus_proxy.Speedshift(),
+        dbus_proxy.Cpufrequency(),
+        dbus_proxy.Intelpowercappingframework(),
+        dbus_proxy.Constraintlongterm(),
+        dbus_proxy.Constraintshortterm(),
     ]
     for obj in objs:
         bus.publish_object(obj.OBJECT_PATH, obj)

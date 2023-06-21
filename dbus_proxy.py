@@ -121,8 +121,7 @@ class GetDBusInterfaceProxyOf:
 
     @property
     def Intelpowercappingframework(self):
-        return InterfaceProxy(self.bus, DBUS_SERVICE_NAME, Intelpowercappingframework.OBJECT_PATH,
-                       Intelpowercappingframework.OBJECT_INTERFACE)
+        return InterfaceProxy(self.bus, DBUS_SERVICE_NAME, Intelpowercappingframework.OBJECT_PATH, Intelpowercappingframework.OBJECT_INTERFACE)
 
     @property
     def Constraintlongterm(self):
@@ -130,5 +129,4 @@ class GetDBusInterfaceProxyOf:
 
     @property
     def Constraintshortterm(self):
-        return InterfaceProxy(self.bus, DBUS_SERVICE_NAME, Constraintshortterm.OBJECT_PATH,
-                       Constraintshortterm.OBJECT_INTERFACE)
+        return InterfaceProxy(self.bus, DBUS_SERVICE_NAME, Constraintshortterm.OBJECT_PATH, Constraintshortterm.OBJECT_INTERFACE)

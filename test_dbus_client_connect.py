@@ -1,3 +1,3 @@
-import dbus_proxy_and_interface
+import dbus_proxy
 
-print(dbus_proxy_and_interface.GetDBusInterfaceProxyOf().Intelpowercappingframework.GetCurrentWatts())
+print(dbus_proxy.GetDBusInterfaceProxyOf().Intelpowercappingframework.GetCurrentWatts())
