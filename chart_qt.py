@@ -39,7 +39,7 @@ class PlotViewer(QtWidgets.QWidget):
 
     def refrash(self):
         # create an axis
-        x = 30
+        x = range(30)
         self.buffer.append(self.intelrapl.get_current_watts(self.intelrapl))
         y = self.buffer.get_last(30)
 
