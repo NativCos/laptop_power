@@ -1,10 +1,13 @@
 """
 В именах методов подчеркивания нельзя
 """
+from dasbus.client.observer import DBusObserver
 from dasbus.server.interface import dbus_interface, dbus_signal
 from dasbus.connection import SystemMessageBus
 from dasbus.client.proxy import InterfaceProxy
 from dasbus.typing import Str, Int, Double, Bool
+from dbus import SystemBus
+
 import service
 import logging
 
@@ -109,10 +112,8 @@ class GetDBusInterfaceProxyOf:
 
     def __init__(self):
         self.bus = SystemMessageBus()
-        try:
-            InterfaceProxy(self.bus, DBUS_SERVICE_NAME, Intelpstatedriver.OBJECT_PATH,
-                           Intelpstatedriver.OBJECT_INTERFACE).Test()
-        except:
+        observer = DBusObserver(SystemBus, DBUS_SERVICE_NAME)
+        if not observer.is_service_available():
             msg = "can't connect to bus and take a proxy"
             _logger.error(msg)
             raise RuntimeError(msg)
