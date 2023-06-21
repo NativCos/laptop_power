@@ -5,9 +5,15 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 import matplotlib.pyplot as plt
 import numpy as np
+import logging
 
 from service import IntelPowerCappingFramework
 from utils import RingBuffer
+
+
+_logger = logging.getLogger(__name__)
+_logger.setLevel(logging.DEBUG)
+_logger.addHandler(logging.StreamHandler())
 
 
 class PlotViewer(QtWidgets.QWidget):
@@ -40,6 +46,7 @@ class PlotViewer(QtWidgets.QWidget):
     def refrash(self):
         # create an axis
         x = range(self.buffer.size)
+        _logger.debug(self.intelrapl.get_current_watts(self.interval) / float(10 ** 6))
         self.buffer.append(self.intelrapl.get_current_watts(self.interval) / float(10 ** 6))
         y = self.buffer.get_last(self.buffer.size)
 
