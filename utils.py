@@ -29,3 +29,8 @@ class RingBuffer:
             return self._buffer[self._head_index - index]
         else:
             return self._buffer[self._size - (index - self._head_index)]
+
+    def fill_by_object(self, obj):
+        for i in range(self._size):
+            self._buffer.insert(i, obj)
+
