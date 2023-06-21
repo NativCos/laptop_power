@@ -66,8 +66,8 @@ class Intelpowercappingframework:
     def EnableMmioRapl(self):
         service.IntelPowerCappingFramework().enable_mmio_rapl()
 
-    def GetCurrentWatts(self) -> Int:
-        return service.IntelPowerCappingFramework().get_current_watts()
+    def GetCurrentWatts(self) -> Str:
+        return str(service.IntelPowerCappingFramework().get_current_watts())
 
 
 @dbus_interface("world.nkt.laptoppower.intelpowercappingframework.long_term")

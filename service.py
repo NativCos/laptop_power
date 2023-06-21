@@ -247,7 +247,7 @@ class IntelPowerCappingFramework:
         """"Текущие значение счётчика энергии.
         :return: int МИКРОДЖОУЛЯХ
         """
-        if '_linux_energy_uj_file' not in self:
+        if hasattr(self, '_linux_energy_uj_file'):
             self._linux_energy_uj_file = open(self._SYSFS_MASTER_PACKAGE_MSR + '/energy_uj', 'rt')
         return int(self._linux_energy_uj_file.read())
 
