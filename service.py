@@ -5,9 +5,15 @@ import datetime
 import os
 import pwd
 import time
+import logging
 
 import dbus_proxy
 from model import Battery
+
+
+_logger = logging.getLogger(__name__)
+_logger.setLevel(logging.DEBUG)
+_logger.addHandler(logging.StreamHandler())
 
 
 def calc_times(data):
@@ -292,6 +298,7 @@ class IntelPowerCappingFramework:
         return int(self._linux_energy_uj_file.read())
 
     def disable_mmio_rapl(self):
+        _logger.debug(f'U name is {os.getuid()}')
         if os.getuid() != '0':  # is not "root' user
             dbus_proxy.GetDBusInterfaceProxyOf().Intelpowercappingframework.DisableMmioRapl()
             return
