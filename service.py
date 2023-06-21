@@ -300,7 +300,7 @@ class IntelPowerCappingFramework:
     def disable_mmio_rapl(self):
         _logger.debug(f'U name is {os.getuid()}')
         if os.getuid() != '0':  # is not "root' user
-            dbus_proxy.GetDBusInterfaceProxyOf().Intelpowercappingframework.DisableMmioRapl()
+            #dbus_proxy.GetDBusInterfaceProxyOf().Intelpowercappingframework.DisableMmioRapl()
             return
         with open(f'{self._SYSFS_MASTER_PACKAGE_MMIO}/enabled', 'wt') as f:
             f.write(str(0))
