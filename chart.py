@@ -2,7 +2,7 @@
 import plotly.graph_objects as go
 from database import DBSession
 from model import Battery
-from service import calc_times
+from service import BatteryService
 import datetime
 import numpy as np
 import logging
@@ -39,7 +39,7 @@ def show_charts(data):
 def main():
     data = get_data(DBSession())
     _logger.debug(data[0])
-    calc_times(data)
+    BatteryService.calc_times(data)
     show_charts(data)
 
 
