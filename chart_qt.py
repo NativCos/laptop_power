@@ -36,7 +36,7 @@ class PlotViewer(QtWidgets.QWidget):
         self.intelrapl = IntelPowerCappingFramework()
         self.buffer = RingBuffer(30)
         self.buffer.fill_by_object(0)
-        self.interval = 1
+        self.interval = 3
 
         self.refrash()
         self.timer = QTimer()
