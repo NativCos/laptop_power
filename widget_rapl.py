@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 import sys
-from PyQt6 import uic
+from PyQt6 import uic, QtWidgets
 from PyQt6.QtWidgets import QApplication, QWidget
 from PyQt6.QtCore import QTimer, Qt
 
 from service import IntelPowerCappingFramework
+from chart_qt import PlotViewer
 
 
 class RAPLWidget(QWidget):
@@ -18,8 +19,12 @@ class RAPLWidget(QWidget):
         self.raplservice = IntelPowerCappingFramework()
 
         self.timer = QTimer()
-        self.timer.timeout.connect(self.rapl_refresh)
+        #self.timer.timeout.connect(self.rapl_refresh)
         self.timer.start(2000)
+
+        layout = QtWidgets.QVBoxLayout()
+        layout.addWidget(PlotViewer())
+        self.widget_graph.setLayout(layout)
 
         self.pushButton_edit.clicked.connect(self.pushButton_edit_clicked)
         self.pushButton_cancel.clicked.connect(self.pushButton_cancel_clicked)
@@ -84,7 +89,6 @@ class RAPLWidget(QWidget):
                 self.raplservice.mmio.short_term.get_time_window_us() / float(10 ** 6)
             )
         )
-
 
     def rapl_refresh(self):
         self.lcdNumber_watts.display(

@@ -1403,6 +1403,9 @@
      </layout>
     </widget>
    </item>
+   <item>
+    <widget class="QWidget" name="widget_graph" native="true"/>
+   </item>
   </layout>
  </widget>
  <resources/>
