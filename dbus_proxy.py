@@ -66,19 +66,23 @@ class Intelpowercappingframework:
     OBJECT_INTERFACE = "world.nkt.laptoppower.intelpowercappingframework"
     OBJECT_PATH = '/intelpstatedriver/intelpowercappingframework'
 
+    def __init__(self):
+        self.ipowerframe = service.IntelPowerCappingFramework()
+
     def GetEnergyUj(self) -> Str:
-        return str(service.IntelPowerCappingFramework().get_energy_uj())
+        # TODO не умею через dbus передавать double
+        return str(self.ipowerframe.get_energy_uj())
 
     def DisableMmioRapl(self):
         _logger.debug('called Intelpowercappingframework.DisableMmioRapl()')
-        service.IntelPowerCappingFramework().disable_mmio_rapl()
+        self.ipowerframe.disable_mmio_rapl()
 
     def EnableMmioRapl(self):
-        service.IntelPowerCappingFramework().enable_mmio_rapl()
+        self.ipowerframe.enable_mmio_rapl()
 
     def GetCurrentWatts(self) -> Str:
         # TODO не умею через dbus передавать double
-        return str(service.IntelPowerCappingFramework().get_current_watts())
+        return str(self.ipowerframe.get_current_watts())
 
 
 @dbus_interface("world.nkt.laptoppower.intelpowercappingframework.long_term")
@@ -86,12 +90,14 @@ class Constraintlongterm:
     OBJECT_INTERFACE = "world.nkt.laptoppower.intelpowercappingframework.long_term"
     OBJECT_PATH = '/intelpstatedriver/intelpowercappingframework/long_term'
 
-    def SetPowerLimitUw(self, limit: Int):
+    def __init__(self):
+        self.ipowerframe = service.IntelPowerCappingFramework()
 
-        service.IntelPowerCappingFramework().long_term.set_power_limit_uw(limit)
+    def SetPowerLimitUw(self, limit: Int):
+        self.ipowerframe.long_term.set_power_limit_uw(limit)
 
     def SetTimeWindowUs(self, limit: Int):
-        service.IntelPowerCappingFramework().long_term.set_time_window_us(limit)
+        self.ipowerframe.long_term.set_time_window_us(limit)
 
 
 @dbus_interface("world.nkt.laptoppower.intelpowercappingframework.short_term")
@@ -99,11 +105,14 @@ class Constraintshortterm:
     OBJECT_INTERFACE = "world.nkt.laptoppower.intelpowercappingframework.short_term"
     OBJECT_PATH = '/intelpstatedriver/intelpowercappingframework/short_term'
 
+    def __init__(self):
+        self.ipowerframe = service.IntelPowerCappingFramework()
+
     def SetPowerLimitUw(self, limit: Int):
-        service.IntelPowerCappingFramework().short_term.set_power_limit_uw(limit)
+        self.ipowerframe.short_term.set_power_limit_uw(limit)
 
     def SetTimeWindowUs(self, limit: Int):
-        service.IntelPowerCappingFramework().short_term.set_time_window_us(limit)
+        self.ipowerframe.short_term.set_time_window_us(limit)
 
 
 class GetDBusInterfaceProxyOf:
