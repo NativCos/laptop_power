@@ -105,28 +105,42 @@ class GetDBusInterfaceProxyOf:
 
     @property
     def Intelpstatedriver(self):
-        return InterfaceProxy(self.bus, DBUS_SERVICE_NAME, Intelpstatedriver.OBJECT_PATH, Intelpstatedriver.OBJECT_INTERFACE)
+        if not hasattr(self, '_intelpstatedriver'):
+            self._intelpstatedriver = InterfaceProxy(self.bus, DBUS_SERVICE_NAME, Intelpstatedriver.OBJECT_PATH, Intelpstatedriver.OBJECT_INTERFACE)
+        return self._intelpstatedriver
 
     @property
     def Speedshift(self):
-        return InterfaceProxy(self.bus, DBUS_SERVICE_NAME, Speedshift.OBJECT_PATH, Speedshift.OBJECT_INTERFACE)
+        if not hasattr(self, '_speedshift'):
+            self._speedshift = InterfaceProxy(self.bus, DBUS_SERVICE_NAME, Speedshift.OBJECT_PATH, Speedshift.OBJECT_INTERFACE)
+        return self._speedshift
 
     @property
     def Turbopstates(self):
-        return InterfaceProxy(self.bus, DBUS_SERVICE_NAME, Turbopstates.OBJECT_PATH, Turbopstates.OBJECT_INTERFACE)
+        if not hasattr(self, '_turbopstates'):
+            self._turbopstates = InterfaceProxy(self.bus, DBUS_SERVICE_NAME, Turbopstates.OBJECT_PATH, Turbopstates.OBJECT_INTERFACE)
+        return self._turbopstates
 
     @property
     def Cpufrequency(self):
-        return InterfaceProxy(self.bus, DBUS_SERVICE_NAME, Cpufrequency.OBJECT_PATH, Cpufrequency.OBJECT_INTERFACE)
+        if not hasattr(self, '_cpufrequency'):
+            self._cpufrequency = InterfaceProxy(self.bus, DBUS_SERVICE_NAME, Cpufrequency.OBJECT_PATH, Cpufrequency.OBJECT_INTERFACE)
+        return self._cpufrequency
 
     @property
     def Intelpowercappingframework(self):
-        return InterfaceProxy(self.bus, DBUS_SERVICE_NAME, Intelpowercappingframework.OBJECT_PATH, Intelpowercappingframework.OBJECT_INTERFACE)
+        if not hasattr(self, '_intelpowercappingframework'):
+            self._intelpowercappingframework = InterfaceProxy(self.bus, DBUS_SERVICE_NAME, Intelpowercappingframework.OBJECT_PATH, Intelpowercappingframework.OBJECT_INTERFACE)
+        return self._intelpowercappingframework
 
     @property
     def Constraintlongterm(self):
-        return InterfaceProxy(self.bus, DBUS_SERVICE_NAME, Constraintlongterm.OBJECT_PATH, Constraintlongterm.OBJECT_INTERFACE)
+        if not hasattr(self, '_constraintlongterm'):
+            self._constraintlongterm = InterfaceProxy(self.bus, DBUS_SERVICE_NAME, Constraintlongterm.OBJECT_PATH, Constraintlongterm.OBJECT_INTERFACE)
+        return self._constraintlongterm
 
     @property
     def Constraintshortterm(self):
-        return InterfaceProxy(self.bus, DBUS_SERVICE_NAME, Constraintshortterm.OBJECT_PATH, Constraintshortterm.OBJECT_INTERFACE)
+        if not hasattr(self, '_constraintshortterm'):
+            self._constraintshortterm = InterfaceProxy(self.bus, DBUS_SERVICE_NAME, Constraintshortterm.OBJECT_PATH, Constraintshortterm.OBJECT_INTERFACE)
+        return self._constraintshortterm
