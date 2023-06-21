@@ -60,6 +60,7 @@ class IntelPStateDriver:
         def enable():
             if os.getuid() != '0':  # is not "root' user
                 dbus_proxy.GetDBusInterfaceProxyOf().Speedshift.Enable()
+                return
             with open('/sys/devices/system/cpu/intel_pstate/hwp_dynamic_boost', 'wt') as f:
                 f.write('1')
 
@@ -72,6 +73,7 @@ class IntelPStateDriver:
         def disable():
             if os.getuid() != '0':  # is not "root' user
                 dbus_proxy.GetDBusInterfaceProxyOf().Speedshift.Disable()
+                return
             with open('/sys/devices/system/cpu/intel_pstate/hwp_dynamic_boost', 'wt') as f:
                 f.write('0')
 
@@ -84,6 +86,7 @@ class IntelPStateDriver:
         def enable():
             if os.getuid() != '0':  # is not "root' user
                 dbus_proxy.GetDBusInterfaceProxyOf().Turbopstates.Enable()
+                return
             with open('/sys/devices/system/cpu/intel_pstate/no_turbo', 'wt') as f:
                 f.write('1')
 
@@ -96,6 +99,7 @@ class IntelPStateDriver:
         def disable():
             if os.getuid() != '0':  # is not "root' user
                 dbus_proxy.GetDBusInterfaceProxyOf().Turbopstates.Disable()
+                return
             with open('/sys/devices/system/cpu/intel_pstate/no_turbo', 'wt') as f:
                 f.write('0')
 
@@ -113,6 +117,7 @@ class IntelPStateDriver:
         """
         if os.getuid() != '0':  # is not "root' user
             dbus_proxy.GetDBusInterfaceProxyOf().Intelpstatedriver.SetEnergyPerfBiasForAllCpu(epb)
+            return
         if epb < 0 or epb >= 15:
             raise ValueError('epb: int 0 (highest performance) to 15 (highest energy savings).')
         with open('/sys/devices/system/cpu/possible', 'rt') as f:
@@ -178,6 +183,7 @@ class CpuFrequency:
         """
         if os.getuid() != '0':  # is not "root' user
             dbus_proxy.GetDBusInterfaceProxyOf().Cpufrequency.SetScalingGovernor(governor)
+            return
         with open(f'/sys/devices/system/cpu/cpu{self._cpu_id}/cpufreq/scaling_available_governors', 'wt') as f:
             return f.write(governor)
 
@@ -209,8 +215,10 @@ class Constraint:
         if os.getuid() != '0':  # is not "root' user
             if self._id == 0:
                 dbus_proxy.GetDBusInterfaceProxyOf().Constraintlongterm.SetPowerLimitUw(power_limit_uw)
+                return
             elif self._id == 1:
                 dbus_proxy.GetDBusInterfaceProxyOf().Constraintshortterm.SetPowerLimitUw(power_limit_uw)
+                return
         with open(f'{self._sysfsMasterPackage}/constraint_{self._id}_power_limit_uw', 'wt') as f:
             f.write(str(power_limit_uw))
 
@@ -229,8 +237,10 @@ class Constraint:
         if os.getuid() != '0':  # is not "root' user
             if self._id == 0:
                 dbus_proxy.GetDBusInterfaceProxyOf().Constraintlongterm.SetTimeWindowUs(time_window_us)
+                return
             elif self._id == 1:
                 dbus_proxy.GetDBusInterfaceProxyOf().Constraintshortterm.SetTimeWindowUs(time_window_us)
+                return
         with open(f'{self._sysfsMasterPackage}/constraint_{self._id}_time_window_us', 'wt') as f:
             f.write(str(time_window_us))
 
@@ -284,12 +294,14 @@ class IntelPowerCappingFramework:
     def disable_mmio_rapl(self):
         if os.getuid() != '0':  # is not "root' user
             dbus_proxy.GetDBusInterfaceProxyOf().Intelpowercappingframework.DisableMmioRapl()
+            return
         with open(f'{self._SYSFS_MASTER_PACKAGE_MMIO}/enabled', 'wt') as f:
             f.write(str(0))
 
     def enable_mmio_rapl(self):
         if os.getuid() != '0':  # is not "root' user
             dbus_proxy.GetDBusInterfaceProxyOf().Intelpowercappingframework.EnableMmioRapl()
+            return
         with open(f'{self._SYSFS_MASTER_PACKAGE_MMIO}/enabled', 'wt') as f:
             f.write(str(0))
 

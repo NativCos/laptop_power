@@ -6,8 +6,13 @@ from dasbus.connection import SystemMessageBus
 from dasbus.client.proxy import InterfaceProxy
 from dasbus.typing import Str, Int, Double, Bool
 import service
+import logging
 
 DBUS_SERVICE_NAME = "world.nkt.laptoppower"
+
+_logger = logging.getLogger(__name__)
+_logger.setLevel(logging.DEBUG)
+_logger.addHandler(logging.StreamHandler())
 
 
 @dbus_interface("world.nkt.laptoppower.intelpstatedriver")
@@ -61,6 +66,7 @@ class Intelpowercappingframework:
         return str(service.IntelPowerCappingFramework().get_energy_uj())
 
     def DisableMmioRapl(self):
+        _logger.debug('called Intelpowercappingframework.DisableMmioRapl()')
         service.IntelPowerCappingFramework().disable_mmio_rapl()
 
     def EnableMmioRapl(self):
@@ -76,6 +82,7 @@ class Constraintlongterm:
     OBJECT_PATH = '/intelpstatedriver/intelpowercappingframework/long_term'
 
     def SetPowerLimitUw(self, limit: Int):
+
         service.IntelPowerCappingFramework().long_term.set_power_limit_uw(limit)
 
     def SetTimeWindowUs(self, limit: Int):

@@ -48,6 +48,7 @@ def main():
 
     threading.Thread(target=my_loop).start()
     loop = DasBusEventLoop()
+    _logger.debug('starting loop...')
     loop.run()
 
 
