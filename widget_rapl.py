@@ -1,4 +1,4 @@
-# File: main.py
+#!/usr/bin/env python3
 import sys
 from PyQt6 import uic
 from PyQt6.QtWidgets import QApplication, QWidget
