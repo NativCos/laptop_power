@@ -41,7 +41,7 @@ class PlotViewer(QtWidgets.QWidget):
         # create an axis
         x = 30
         self.buffer.append(self.intelrapl.get_current_watts(self.intelrapl))
-        y = self.buffer.get_last(self.interval)
+        y = self.buffer.get_last(30)
 
         self.figure.canvas.draw()
         self.figure.canvas.flush_events()
