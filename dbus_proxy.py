@@ -113,7 +113,7 @@ class GetDBusInterfaceProxyOf:
     def __init__(self):
         self.bus = SystemMessageBus()
         observer = DBusObserver(SystemBus, DBUS_SERVICE_NAME)
-        if not observer.is_service_available():
+        if not observer.is_service_available:
             msg = "can't connect to bus and take a proxy"
             _logger.error(msg)
             raise RuntimeError(msg)

@@ -46,7 +46,7 @@ def main():
     for obj in objs:
         bus.publish_object(obj.OBJECT_PATH, obj)
 
-    threading.Thread(target=my_loop).start()
+    threading.Thread(target=my_loop, daemon=True).start()  # Warning it is daemon
     loop = DasBusEventLoop()
     _logger.debug('starting loop...')
     loop.run()
