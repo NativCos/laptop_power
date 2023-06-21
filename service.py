@@ -3,11 +3,13 @@
 # wireless почти не тратит энергию
 import datetime
 import os
+import threading
 import time
 import logging
 
 import dbus_proxy
 from model import Battery
+from utils import RingBuffer
 
 
 _logger = logging.getLogger(__name__)
@@ -257,6 +259,11 @@ class IntelPowerCappingFramework:
         setattr(self.mmio, 'long_term', ConstraintLongTerm(self._SYSFS_MASTER_PACKAGE_MMIO))
         setattr(self.mmio, 'short_term', ConstraintShortTerm(self._SYSFS_MASTER_PACKAGE_MMIO))
 
+        self.energy_uj_buffer_by_seconds = RingBuffer(10)
+        threading.Thread(daemon=True,
+                         target=lambda: self.energy_uj_buffer_by_seconds.append(self.get_energy_uj()) and time.sleep(1.0)
+                         ).start()
+
     def get_energy_uj(self):
         """"Текущие значение счётчика энергии.
         :return: int МИКРОДЖОУЛЯХ
@@ -293,10 +300,8 @@ class IntelPowerCappingFramework:
             return float(dbus_proxy.GetDBusInterfaceProxyOf().Intelpowercappingframework.GetCurrentWatts())
         if time_interval <= 0:
             raise ValueError("time_interval <= 0 is meaninglessly")
-        before = self.get_energy_uj()
-        time.sleep(time_interval)
-        after = self.get_energy_uj()
-        return (after - before) / float(time_interval)
+        energy_uj = self.energy_uj_buffer_by_seconds.get_last(2)
+        return (energy_uj[1] - energy_uj[0]) / float(time_interval)
 
     def __del__(self):
         if self._linux_energy_uj_file is not None:

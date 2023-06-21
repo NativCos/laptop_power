@@ -1,0 +1,31 @@
+
+
+class RingBuffer:
+    _buffer = list()
+    _head_index = 0
+    _size = 0
+
+    def __init__(self, size):
+        self._size = size
+        for _ in range(size):
+            self._buffer.append(None)
+
+    def append(self, data):
+        self._buffer[(self._head_index + 1) % self._size] = data
+        self._head_index = (self._head_index + 1) % self._size
+
+    def get_last(self, quantity=1):
+        if quantity > self._size:
+            raise ValueError()
+        first_part = self._head_index - quantity if self._head_index >= quantity else None
+        second_part = self._size - (quantity - self._head_index) if quantity > self._head_index else self._size
+        return self._buffer[self._head_index: first_part: -1] + self._buffer[self._size - 1: second_part: -1]
+
+    def get_by_index(self,index):
+        # TODO: ничего не проверял
+        if self._head_index >= index:
+            return self._buffer[self._head_index - index]
+        else:
+            return self._buffer[self._size - (index - self._head_index)]
+
+
