@@ -259,7 +259,7 @@ class IntelPowerCappingFramework:
         setattr(self.mmio, 'long_term', ConstraintLongTerm(self._SYSFS_MASTER_PACKAGE_MMIO))
         setattr(self.mmio, 'short_term', ConstraintShortTerm(self._SYSFS_MASTER_PACKAGE_MMIO))
 
-        self.energy_uj_buffer_by_seconds = RingBuffer(2)
+        self.energy_uj_buffer_by_seconds = RingBuffer(10)
         def update_energy_uj():
             while True:
                 self.energy_uj_buffer_by_seconds.append(self.get_energy_uj())
@@ -305,7 +305,7 @@ class IntelPowerCappingFramework:
         if time_interval <= 0:
             raise ValueError("time_interval <= 0 is meaninglessly")
         energy_uj = self.energy_uj_buffer_by_seconds.get_last(time_interval + 1)
-        return (energy_uj[0] - energy_uj[1]) / float(time_interval)
+        return (energy_uj[0] - energy_uj[-1]) / float(time_interval)
 
     def __del__(self):
         if self._linux_energy_uj_file is not None:
