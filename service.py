@@ -309,7 +309,7 @@ class IntelPowerCappingFramework:
             dbus_proxy.GetDBusInterfaceProxyOf().Intelpowercappingframework.EnableMmioRapl()
             return
         with open(f'{self._SYSFS_MASTER_PACKAGE_MMIO}/enabled', 'wt') as f:
-            f.write(str(0))
+            f.write(str(1))
 
     def get_mmio_rapl_enabled(self):
         with open(self._SYSFS_MASTER_PACKAGE_MMIO + '/enabled', 'rt') as f:
