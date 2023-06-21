@@ -19,7 +19,7 @@ class RAPLWidget(QWidget):
         self.raplservice = IntelPowerCappingFramework()
 
         self.timer = QTimer()
-        #self.timer.timeout.connect(self.rapl_refresh)
+        self.timer.timeout.connect(self.rapl_refresh)
         self.timer.start(2000)
 
         layout = QtWidgets.QVBoxLayout()
