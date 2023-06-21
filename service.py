@@ -2,7 +2,11 @@
 # экран потребляет 3,6 ВАтт на 100%
 # wireless почти не тратит энергию
 import datetime
+import os
+import pwd
 import time
+
+import dbus_proxy
 from model import Battery
 
 
@@ -54,6 +58,8 @@ class IntelPStateDriver:
             /sys/devices/system/cpu/cpu*/power/energy_perf_bias"""
         @staticmethod
         def enable():
+            if os.getuid() != '0':  # is not "root' user
+                dbus_proxy.GetDBusInterfaceProxyOf().Speedshift.Enable()
             with open('/sys/devices/system/cpu/intel_pstate/hwp_dynamic_boost', 'wt') as f:
                 f.write('1')
 
@@ -64,6 +70,8 @@ class IntelPStateDriver:
 
         @staticmethod
         def disable():
+            if os.getuid() != '0':  # is not "root' user
+                dbus_proxy.GetDBusInterfaceProxyOf().Speedshift.Disable()
             with open('/sys/devices/system/cpu/intel_pstate/hwp_dynamic_boost', 'wt') as f:
                 f.write('0')
 
@@ -74,6 +82,8 @@ class IntelPStateDriver:
 
         @staticmethod
         def enable():
+            if os.getuid() != '0':  # is not "root' user
+                dbus_proxy.GetDBusInterfaceProxyOf().Turbopstates.Enable()
             with open('/sys/devices/system/cpu/intel_pstate/no_turbo', 'wt') as f:
                 f.write('1')
 
@@ -84,6 +94,8 @@ class IntelPStateDriver:
 
         @staticmethod
         def disable():
+            if os.getuid() != '0':  # is not "root' user
+                dbus_proxy.GetDBusInterfaceProxyOf().Turbopstates.Disable()
             with open('/sys/devices/system/cpu/intel_pstate/no_turbo', 'wt') as f:
                 f.write('0')
 
@@ -99,6 +111,8 @@ class IntelPStateDriver:
         on a scale of 0 (highest performance) to 15 (highest energy savings).
         :param epb: int 0 (highest performance) to 15 (highest energy savings).
         """
+        if os.getuid() != '0':  # is not "root' user
+            dbus_proxy.GetDBusInterfaceProxyOf().Intelpstatedriver.SetEnergyPerfBiasForAllCpu(epb)
         if epb < 0 or epb >= 15:
             raise ValueError('epb: int 0 (highest performance) to 15 (highest energy savings).')
         with open('/sys/devices/system/cpu/possible', 'rt') as f:
@@ -162,6 +176,8 @@ class CpuFrequency:
         """
         :param governor: see CpuFrequency.get_scaling_available_governors
         """
+        if os.getuid() != '0':  # is not "root' user
+            dbus_proxy.GetDBusInterfaceProxyOf().Cpufrequency.SetScalingGovernor(governor)
         with open(f'/sys/devices/system/cpu/cpu{self._cpu_id}/cpufreq/scaling_available_governors', 'wt') as f:
             return f.write(governor)
 
@@ -185,10 +201,16 @@ class Constraint:
         with open(f'{self._sysfsMasterPackage}/constraint_{self._id}_power_limit_uw', 'rt') as f:
             return int(f.read())
 
-    def set_power_limit_uw(self, power_limit_uw):
+    def set_power_limit_uw(self, power_limit_uw: int):
         """
         :param power_limit_uw: int МИКРОВАТТЫ
         """
+        # TODO: спагетти код. впихнул авторизацию в логику. была обстракция от типа Constraint, а Я опять впихнул
+        if os.getuid() != '0':  # is not "root' user
+            if self._id == 0:
+                dbus_proxy.GetDBusInterfaceProxyOf().Constraintlongterm.SetPowerLimitUw(power_limit_uw)
+            elif self._id == 1:
+                dbus_proxy.GetDBusInterfaceProxyOf().Constraintshortterm.SetPowerLimitUw(power_limit_uw)
         with open(f'{self._sysfsMasterPackage}/constraint_{self._id}_power_limit_uw', 'wt') as f:
             f.write(str(power_limit_uw))
 
@@ -203,6 +225,12 @@ class Constraint:
         """
         :param time_window_us: int МИКРОСЕКУНДЫ
         """
+        # TODO: спагетти код. впихнул авторизацию в логику. была обстракция от типа Constraint, а Я опять впихнул
+        if os.getuid() != '0':  # is not "root' user
+            if self._id == 0:
+                dbus_proxy.GetDBusInterfaceProxyOf().Constraintlongterm.SetTimeWindowUs(time_window_us)
+            elif self._id == 1:
+                dbus_proxy.GetDBusInterfaceProxyOf().Constraintshortterm.SetTimeWindowUs(time_window_us)
         with open(f'{self._sysfsMasterPackage}/constraint_{self._id}_time_window_us', 'wt') as f:
             f.write(str(time_window_us))
 
@@ -247,15 +275,21 @@ class IntelPowerCappingFramework:
         """"Текущие значение счётчика энергии.
         :return: int МИКРОДЖОУЛЯХ
         """
+        if os.getuid() != '0':  # is not "root' user
+            return dbus_proxy.GetDBusInterfaceProxyOf().Intelpowercappingframework.GetEnergyUj()
         if hasattr(self, '_linux_energy_uj_file'):
             self._linux_energy_uj_file = open(self._SYSFS_MASTER_PACKAGE_MSR + '/energy_uj', 'rt')
         return int(self._linux_energy_uj_file.read())
 
     def disable_mmio_rapl(self):
+        if os.getuid() != '0':  # is not "root' user
+            dbus_proxy.GetDBusInterfaceProxyOf().Intelpowercappingframework.DisableMmioRapl()
         with open(f'{self._SYSFS_MASTER_PACKAGE_MMIO}/enabled', 'wt') as f:
             f.write(str(0))
 
     def enable_mmio_rapl(self):
+        if os.getuid() != '0':  # is not "root' user
+            dbus_proxy.GetDBusInterfaceProxyOf().Intelpowercappingframework.EnableMmioRapl()
         with open(f'{self._SYSFS_MASTER_PACKAGE_MMIO}/enabled', 'wt') as f:
             f.write(str(0))
 
@@ -267,6 +301,8 @@ class IntelPowerCappingFramework:
         """ В этом верменном промежутке была средняя мощьность
         :param time_interval int СЕКУНДЫ
         :return: float МИКРОВАТТ"""
+        if os.getuid() != '0':  # is not "root' user
+            return dbus_proxy.GetDBusInterfaceProxyOf().Intelpowercappingframework.GetCurrentWatts()
         if time_interval <= 0:
             raise ValueError("time_interval <= 0 is meaninglessly")
         before = self.get_energy_uj()
