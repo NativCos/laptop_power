@@ -1,9 +1,13 @@
 """
 В именах методов подчеркивания нельзя
 """
+import grp
+import os
+import time
+
 from dasbus.client.observer import DBusObserver
 from dasbus.server.interface import dbus_interface, dbus_signal
-from dasbus.connection import SystemMessageBus
+from dasbus.connection import SystemMessageBus, SessionMessageBus
 from dasbus.client.proxy import InterfaceProxy
 from dasbus.typing import Str, Int, Double, Bool
 from dbus import SystemBus
@@ -112,8 +116,8 @@ class GetDBusInterfaceProxyOf:
 
     def __init__(self):
         self.bus = SystemMessageBus()
-        observer = DBusObserver(self.bus, DBUS_SERVICE_NAME)
-        if not observer.is_service_available:
+        # dasbus.client.observer import DBusObserver IS A SHIT AND DONT WORKS
+        if grp.getgrnam('wheel').gr_gid not in os.getgroups():
             msg = "can't connect to bus and take a proxy"
             _logger.error(msg)
             raise RuntimeError(msg)
