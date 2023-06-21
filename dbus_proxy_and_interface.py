@@ -57,8 +57,8 @@ class Intelpowercappingframework:
     OBJECT_INTERFACE = "world.nkt.laptoppower.intelpowercappingframework"
     OBJECT_PATH = '/intelpstatedriver/intelpowercappingframework'
 
-    def GetEnergyUj(self) -> Int:
-        return service.IntelPowerCappingFramework().get_energy_uj()
+    def GetEnergyUj(self) -> Str:
+        return str(service.IntelPowerCappingFramework().get_energy_uj())
 
     def DisableMmioRapl(self):
         service.IntelPowerCappingFramework().disable_mmio_rapl()
