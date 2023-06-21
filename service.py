@@ -42,7 +42,7 @@ def calc_times(data):
 class IntelPStateDriver:
     """intel P-state scaling driver that realization Intel SpeedStep Technology"""
 
-    class speedShift:
+    class SpeedShift:
         """Intel SpeedShift aka Hardware P-states.
         У меня не работает почему-то. нет эффекта.
         Если включено, то P состояниями управляет процессор а не драйвер и
@@ -53,43 +53,43 @@ class IntelPStateDriver:
         или же крутить напрямую intel крутилку производительности:
             /sys/devices/system/cpu/cpu*/power/energy_perf_bias"""
         @staticmethod
-        def enable(self):
+        def enable():
             with open('/sys/devices/system/cpu/intel_pstate/hwp_dynamic_boost', 'wt') as f:
                 f.write('1')
 
         @staticmethod
-        def get(self):
+        def get():
             with open('/sys/devices/system/cpu/intel_pstate/hwp_dynamic_boost', 'rt') as f:
-                return bool(f.read())
+                return False if '0' in f.read() else True
 
         @staticmethod
-        def disable(self):
+        def disable():
             with open('/sys/devices/system/cpu/intel_pstate/hwp_dynamic_boost', 'wt') as f:
                 f.write('0')
 
-    class turboPstates:
+    class TurboPstates:
         """Intel allow p_state drive set CPU to turbo P states.
         Изменять бессмысленно.
         Позволять ли драйверу переходить в драйв P states."""
 
         @staticmethod
-        def enable(self):
+        def enable():
             with open('/sys/devices/system/cpu/intel_pstate/no_turbo', 'wt') as f:
                 f.write('1')
 
         @staticmethod
-        def get(self):
+        def get():
             with open('/sys/devices/system/cpu/intel_pstate/no_turbo', 'rt') as f:
-                return bool(f.read())
+                return False if '0' in f.read() else True
 
         @staticmethod
-        def disable(self):
+        def disable():
             with open('/sys/devices/system/cpu/intel_pstate/no_turbo', 'wt') as f:
                 f.write('0')
 
     @staticmethod
     def get_energy_perf_bias_for_all_cpu() -> int:
-        with open('/sys/devices/system/cpu/cpu*/power/energy_perf_bias', 'rt') as f:
+        with open('/sys/devices/system/cpu/cpu0/power/energy_perf_bias', 'rt') as f:
             return int(f.read())
 
     @staticmethod
