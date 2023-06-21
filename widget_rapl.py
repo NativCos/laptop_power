@@ -19,7 +19,7 @@ class RAPLWidget(QWidget):
 
         self.timer = QTimer()
         self.timer.timeout.connect(self.rapl_refresh)
-        self.timer.start(1000)
+        self.timer.start(2000)
 
         self.pushButton_edit.clicked.connect(self.pushButton_edit_clicked)
         self.pushButton_cancel.clicked.connect(self.pushButton_cancel_clicked)

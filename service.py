@@ -176,8 +176,9 @@ class Constraint:
         """ МИКРОВАТТЫ
         :return: int
         """
-        with open(f'{self._sysfsMasterPackage}/constraint_{self._id}_power_limit_uw', 'rt') as f:
-            return int(f.read())
+        if not hasattr(self, '_power_limit_uw'):
+            self._power_limit_uw = open(f'{self._sysfsMasterPackage}/constraint_{self._id}_power_limit_uw', 'rt')
+        return int(self._power_limit_uw.read())
 
     def set_power_limit_uw(self, power_limit_uw: int):
         """
@@ -198,8 +199,9 @@ class Constraint:
         """ МИКРОСЕКУНДЫ
         :return: int
         """
-        with open(f'{self._sysfsMasterPackage}/constraint_{self._id}_time_window_us', 'rt') as f:
-            return int(f.read())
+        if not hasattr(self, '_time_window_us'):
+            self._time_window_us = open(f'{self._sysfsMasterPackage}/constraint_{self._id}_time_window_us', 'rt')
+        return int(self._time_window_us.read())
 
     def set_time_window_us(self, time_window_us):
         """
