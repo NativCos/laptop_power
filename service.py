@@ -300,8 +300,8 @@ class IntelPowerCappingFramework:
             return float(dbus_proxy.GetDBusInterfaceProxyOf().Intelpowercappingframework.GetCurrentWatts())
         if time_interval <= 0:
             raise ValueError("time_interval <= 0 is meaninglessly")
-        energy_uj = self.energy_uj_buffer_by_seconds.get_last(2)
-        return (energy_uj[1] - energy_uj[0]) / float(time_interval)
+        energy_uj = self.energy_uj_buffer_by_seconds.get_last(time_interval + 1)
+        return (energy_uj[0] - energy_uj[1]) / float(time_interval)
 
     def __del__(self):
         if self._linux_energy_uj_file is not None:

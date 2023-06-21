@@ -17,6 +17,8 @@ class RingBuffer:
     def get_last(self, quantity=1):
         if quantity > self._size:
             raise ValueError()
+        if self.get_by_index(quantity % self._size) is None:
+            raise RuntimeError('Данные еще не готовы для среза из еще нет')
         first_part = self._head_index - quantity if self._head_index >= quantity else None
         second_part = self._size - (quantity - self._head_index) if quantity > self._head_index else self._size
         return self._buffer[self._head_index: first_part: -1] + self._buffer[self._size - 1: second_part: -1]
