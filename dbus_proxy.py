@@ -109,6 +109,13 @@ class GetDBusInterfaceProxyOf:
 
     def __init__(self):
         self.bus = SystemMessageBus()
+        try:
+            InterfaceProxy(self.bus, DBUS_SERVICE_NAME, Intelpstatedriver.OBJECT_PATH,
+                           Intelpstatedriver.OBJECT_INTERFACE)
+        except:
+            msg = "can't connect to bus and take a proxy"
+            _logger.error(msg)
+            raise RuntimeError(msg)
 
     @property
     def Intelpstatedriver(self):
