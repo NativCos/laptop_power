@@ -25,11 +25,11 @@ class PlotViewer(QtWidgets.QWidget):
 
         self.figure = plt.figure(figsize=(5, 5))
         self.figureCanvas = FigureCanvas(self.figure)
-        self.navigationToolbar = NavigationToolbar(self.figureCanvas, self)
+        #self.navigationToolbar = NavigationToolbar(self.figureCanvas, self)
 
         # create main layout
         layout = QtWidgets.QVBoxLayout()
-        layout.addWidget(self.navigationToolbar)
+        #layout.addWidget(self.navigationToolbar)
         layout.addWidget(self.figureCanvas)
         self.setLayout(layout)
 
@@ -46,15 +46,16 @@ class PlotViewer(QtWidgets.QWidget):
     def refrash(self):
         # create an axis
         x = range(self.buffer.size)
-        _logger.debug(self.intelrapl.get_current_watts(self.interval) / float(10 ** 6))
-        self.buffer.append(self.intelrapl.get_current_watts(self.interval) / float(10 ** 6))
+        w = self.intelrapl.get_current_watts(self.interval) / float(10 ** 6)
+        self.buffer.append(w)
         y = self.buffer.get_last(self.buffer.size)
 
-        self.figure.canvas.draw()
-        self.figure.canvas.flush_events()
         ax = self.figure.add_subplot(111)
         ax.plot(x, y, linewidth=2.0)
-        #ax.set(xlim=(0, 8), xticks=np.arange(1, 8), ylim=(0, 8), yticks=np.arange(1, 8))
+        ax.set(xlabel='time (s)', ylabel='Watts', ylim=(0, 30))
+        ax.grid()
+        self.figure.canvas.draw()
+        self.figure.canvas.flush_events()
 
 
 if __name__ == "__main__":

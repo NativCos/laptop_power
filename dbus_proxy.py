@@ -80,9 +80,9 @@ class Intelpowercappingframework:
     def EnableMmioRapl(self):
         self.ipowerframe.enable_mmio_rapl()
 
-    def GetCurrentWatts(self) -> Str:
+    def GetCurrentWatts(self, interval: Int) -> Str:
         # TODO не умею через dbus передавать double
-        return str(self.ipowerframe.get_current_watts())
+        return str(self.ipowerframe.get_current_watts(int(interval)))
 
 
 @dbus_interface("world.nkt.laptoppower.intelpowercappingframework.long_term")
@@ -124,10 +124,10 @@ class GetDBusInterfaceProxyOf:
     def __init__(self):
         self.bus = SystemMessageBus()
         # dasbus.client.observer import DBusObserver IS A SHIT AND DONT WORKS
-        if grp.getgrnam('wheel').gr_gid not in os.getgroups():
-            msg = "can't connect to bus and take a proxy"
-            _logger.error(msg)
-            raise RuntimeError(msg)
+        #if grp.getgrnam('wheel').gr_gid not in os.getgroups():
+        #    msg = "can't connect to bus and take a proxy"
+        #    _logger.error(msg)
+        #    raise RuntimeError(msg)
 
     @property
     def Intelpstatedriver(self):

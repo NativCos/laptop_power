@@ -1,7 +1,7 @@
 
 
 class RingBuffer:
-    _buffer = list()
+    _buffer = None
     _head_index = 0
     _size = 0
 
@@ -10,6 +10,7 @@ class RingBuffer:
         return self._size
 
     def __init__(self, size):
+        self._buffer = list()
         self._size = size
         for _ in range(size):
             self._buffer.append(None)
@@ -36,5 +37,5 @@ class RingBuffer:
 
     def fill_by_object(self, obj):
         for i in range(self._size):
-            self._buffer.insert(i, obj)
+            self._buffer[i] = obj
 

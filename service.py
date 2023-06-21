@@ -298,6 +298,7 @@ class IntelPowerCappingFramework:
 
     def get_current_watts(self, time_interval=1):
         """ В этом верменном промежутке была средняя мощьность
+
         :param time_interval int СЕКУНДЫ
         :return: float МИКРОВАТТ"""
         if os.getuid() != 0:  # is not "root' user
