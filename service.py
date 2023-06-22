@@ -130,8 +130,6 @@ class CpuFrequency:
     @use_particular_cpu
     def get_driver_name(self):
         """лучше чтобы было intel_pstate"""
-        if os.getuid() != 0:  # is not "root' user
-            return dbus_proxy.GetDBusInterfaceProxyOf().Cpufrequency.GetDriverName(self._cpu_id)
         with open(f'/sys/devices/system/cpu/cpu{self._cpu_id}/cpufreq/scaling_driver', 'rt') as f:
             return f.read().replace('\n', '')
 
@@ -179,7 +177,7 @@ class CpuFrequency:
 
     @use_particular_cpu
     def get_scaling_governor(self):
-        with open(f'/sys/devices/system/cpu/cpu{self._cpu_id}/cpufreq/scaling_available_governors', 'rt') as f:
+        with open(f'/sys/devices/system/cpu/cpu{self._cpu_id}/cpufreq/scaling_governor', 'rt') as f:
             return f.read().replace('\n','')
 
     def set_scaling_governor_for_all(self, governor: str):

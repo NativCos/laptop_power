@@ -27,15 +27,15 @@ class MainWindow(QMainWindow):
         self.checkBox_speedshift.stateChanged.connect(self.checkBox_speedshift_stateChanged)
         self.checkBox_turbo_pstates.stateChanged.connect(self.checkBox_turbo_pstates_stateChanged)
         self.spinBox_intel_epb.valueChanged.connect(self.spinBox_intel_epb_valueChanged)
-        self.comboBox_scaling_governor.currentTextChanged.connect(self.comboBox_scaling_governor_currentTextChanged)
 
         # --- Logic --
         self.cpuFrequency = CpuFrequency()
 
         # --- again UI ---
-        _logger.debug(self.cpuFrequency.cpu[0].get_driver_name())
         self.label_driver_name.setText(self.cpuFrequency.cpu[0].get_driver_name())
         self.comboBox_scaling_governor.addItems(self.cpuFrequency.cpu[0].get_scaling_available_governors())
+        self.comboBox_scaling_governor.setCurrentText(self.cpuFrequency.cpu[0].get_scaling_governor())
+        self.comboBox_scaling_governor.currentTextChanged.connect(self.comboBox_scaling_governor_currentTextChanged)
 
         # --- Timers ---
         self.timer_update_tab_intelpstate = QTimer()
