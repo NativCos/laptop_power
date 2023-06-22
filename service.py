@@ -62,12 +62,12 @@ class IntelPStateDriver:
                 dbus_proxy.GetDBusInterfaceProxyOf().Turbopstates.Enable()
                 return
             with open('/sys/devices/system/cpu/intel_pstate/no_turbo', 'wt') as f:
-                f.write('1')
+                f.write('0')
 
         @staticmethod
         def get():
             with open('/sys/devices/system/cpu/intel_pstate/no_turbo', 'rt') as f:
-                return False if '0' in f.read() else True
+                return True if '0' in f.read() else False
 
         @staticmethod
         def disable():
@@ -75,7 +75,7 @@ class IntelPStateDriver:
                 dbus_proxy.GetDBusInterfaceProxyOf().Turbopstates.Disable()
                 return
             with open('/sys/devices/system/cpu/intel_pstate/no_turbo', 'wt') as f:
-                f.write('0')
+                f.write('1')
 
     @staticmethod
     def get_energy_perf_bias_for_all_cpu() -> int:
