@@ -92,7 +92,7 @@ class IntelPStateDriver:
         if os.getuid() != 0:  # is not "root' user
             dbus_proxy.GetDBusInterfaceProxyOf().Intelpstatedriver.SetEnergyPerfBiasForAllCpu(epb)
             return
-        if epb < 0 or epb >= 15:
+        if epb < 0 or epb > 15:
             raise ValueError('epb: int 0 (highest performance) to 15 (highest energy savings).')
         with open('/sys/devices/system/cpu/possible', 'rt') as f:
             start_id, stop_id = f.read().replace('\n', '').split('-')

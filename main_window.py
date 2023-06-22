@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import sys
 
 from PyQt6.QtWidgets import QMainWindow, QApplication
@@ -15,7 +16,7 @@ _logger.addHandler(logging.StreamHandler())
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        ui_file_name = "mainwindow.ui"
+        ui_file_name = "main_window.ui"
         uic.loadUi(ui_file_name, self)
         rapl = RAPLWidget()
         layout = QtWidgets.QVBoxLayout()
