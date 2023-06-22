@@ -172,7 +172,7 @@ class CpuFrequency:
         if os.getuid() != 0:  # is not "root' user
             dbus_proxy.GetDBusInterfaceProxyOf().Cpufrequency.SetScalingGovernor(self._cpu_id, governor)
             return
-        with open(f'/sys/devices/system/cpu/cpu{self._cpu_id}/cpufreq/scaling_available_governors', 'wt') as f:
+        with open(f'/sys/devices/system/cpu/cpu{self._cpu_id}/cpufreq/scaling_governor', 'wt') as f:
             return f.write(governor)
 
     @use_particular_cpu
