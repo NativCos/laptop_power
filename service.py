@@ -124,7 +124,7 @@ class CpuFrequency:
             pass
             if args[0]._cpu_id is None:
                 raise RuntimeError('use CpuFrequency().cpu[0].FUNCTION()')
-            func(*args, **kwargs)
+            return func(*args, **kwargs)
         return wrapper
 
     @use_particular_cpu
