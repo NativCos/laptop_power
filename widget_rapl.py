@@ -39,7 +39,7 @@ class PlotViewer(QtWidgets.QWidget):
 
         self.refrash()
         self.timer = QTimer()
-        self.timer.timeout.connect(self.refrash)
+        #self.timer.timeout.connect(self.refrash)
         self.timer.start(self.interval*1000)
 
     def refrash(self):

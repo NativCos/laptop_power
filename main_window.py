@@ -58,7 +58,7 @@ class MainWindow(QMainWindow):
         self.spinBox_intel_epb.setValue(IntelPStateDriver.get_energy_perf_bias_for_all_cpu()) # will emit valueChanged()
 
     def checkBox_speedshift_stateChanged(self, state):
-        if not (self.checkBox_speedshift.checkState() == Qt.CheckState.Checked != IntelPStateDriver.SpeedShift.get()):
+        if not ((self.checkBox_speedshift.checkState() == Qt.CheckState.Checked) != IntelPStateDriver.SpeedShift.get()):
             return
         if self.checkBox_speedshift.checkState() == Qt.CheckState.Checked:
             IntelPStateDriver.SpeedShift.enable()
@@ -66,7 +66,7 @@ class MainWindow(QMainWindow):
             IntelPStateDriver.SpeedShift.disable()
 
     def checkBox_turbo_pstates_stateChanged(self, state):
-        if not (self.checkBox_turbo_pstates.checkState() == Qt.CheckState.Checked != IntelPStateDriver.TurboPstates.get()):
+        if not ((self.checkBox_turbo_pstates.checkState() == Qt.CheckState.Checked) != IntelPStateDriver.TurboPstates.get()):
             return
         if self.checkBox_turbo_pstates.checkState() == Qt.CheckState.Checked:
             IntelPStateDriver.TurboPstates.enable()

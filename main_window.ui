@@ -82,10 +82,13 @@
          <item>
           <widget class="QCheckBox" name="checkBox_turbo_pstates">
            <property name="whatsThis">
-            <string comment="Intel allow p_state drive set CPU to turbo P states"/>
+            <string extracomment="Intel allow p_state drive set CPU to turbo P states"/>
            </property>
            <property name="text">
             <string>Turbo P-states</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -106,7 +109,7 @@
               </size>
              </property>
              <property name="whatsThis">
-              <string comment="0 (highest performance) to 15 (highest energy savings)"/>
+              <string extracomment="0 (highest performance) to 15 (highest energy savings)"/>
              </property>
              <property name="maximum">
               <number>15</number>

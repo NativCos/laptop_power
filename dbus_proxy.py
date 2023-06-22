@@ -74,7 +74,6 @@ class Intelpowercappingframework:
         return str(self.ipowerframe.get_energy_uj())
 
     def DisableMmioRapl(self):
-        _logger.debug('called Intelpowercappingframework.DisableMmioRapl()')
         self.ipowerframe.disable_mmio_rapl()
 
     def EnableMmioRapl(self):
