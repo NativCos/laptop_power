@@ -57,7 +57,7 @@ class Cpufrequency:
     OBJECT_INTERFACE = "world.nkt.laptoppower.cpufrequency"
     OBJECT_PATH = '/intelpstatedriver/cpufrequency'
 
-    def SetScalingGovernor(self, cpu_id, governor: Str):
+    def SetScalingGovernor(self, cpu_id: Int, governor: Str):
         service.CpuFrequency().cpu[cpu_id].set_scaling_governor(governor)
 
 
