@@ -60,6 +60,9 @@ class Cpufrequency:
     def SetScalingGovernor(self, cpu_id: Int, governor: Str):
         service.CpuFrequency().cpu[cpu_id].set_scaling_governor(governor)
 
+    def GetDriverName(self, cpu_id: Int):
+        return service.CpuFrequency().cpu[cpu_id].get_driver_name()
+
 
 @dbus_interface("world.nkt.laptoppower.intelpowercappingframework")
 class Intelpowercappingframework:
