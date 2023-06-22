@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab_rapl">
        <attribute name="title">
@@ -151,7 +151,7 @@
            <item>
             <widget class="QLabel" name="label_driver_name">
              <property name="text">
-              <string>    </string>
+              <string/>
              </property>
             </widget>
            </item>
@@ -193,12 +193,23 @@
    </property>
    <widget class="QMenu" name="menu">
     <property name="title">
-     <string>Выйти</string>
+     <string>Файл</string>
     </property>
+    <addaction name="action_exit"/>
    </widget>
    <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionjhgjhg">
+   <property name="text">
+    <string>jhgjhg</string>
+   </property>
+  </action>
+  <action name="action_exit">
+   <property name="text">
+    <string>Выйти</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
