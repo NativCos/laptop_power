@@ -57,8 +57,8 @@ class Cpufrequency:
     OBJECT_INTERFACE = "world.nkt.laptoppower.cpufrequency"
     OBJECT_PATH = '/intelpstatedriver/cpufrequency'
 
-    def SetScalingGovernor(self, governor: Str):
-        service.CpuFrequency().set_scaling_governor(governor)
+    def SetScalingGovernor(self, cpu_id, governor: Str):
+        service.CpuFrequency().cpu[cpu_id].set_scaling_governor(governor)
 
 
 @dbus_interface("world.nkt.laptoppower.intelpowercappingframework")

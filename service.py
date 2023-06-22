@@ -118,11 +118,22 @@ class CpuFrequency:
         else:
             self._cpu_id = cpu_id
 
+    @staticmethod
+    def use_particular_cpu(func):
+        def wrapper(*args, **kwargs):
+            pass
+            if args[0]._cpu_id is None:
+                raise RuntimeError('use CpuFrequency().cpu[0].FUNCTION()')
+            func(*args, **kwargs)
+        return wrapper
+
+    @use_particular_cpu
     def get_driver_name(self):
         """лучше чтобы было intel_pstate"""
         with open(f'/sys/devices/system/cpu/cpu{self._cpu_id}/cpufreq/scaling_driver', 'rt') as f:
             return f.read().replace('\n', '')
 
+    @use_particular_cpu
     def get_scaling_max_freq(self):
         """ Безполезно.
         :return: КИЛЛОГЕРЦЫ 10**3
@@ -130,6 +141,7 @@ class CpuFrequency:
         with open(f'/sys/devices/system/cpu/cpu{self._cpu_id}/cpufreq/scaling_max_freq', 'rt') as f:
             return int(f.read())
 
+    @use_particular_cpu
     def get_scaling_min_freq(self):
         """ Безполезно.
         :return: КИЛЛОГЕРЦЫ 10**3
@@ -137,6 +149,7 @@ class CpuFrequency:
         with open(f'/sys/devices/system/cpu/cpu{self._cpu_id}/cpufreq/scaling_min_freq', 'rt') as f:
             return int(f.read())
 
+    @use_particular_cpu
     def get_scaling_cur_freq(self):
         """
         :return: КИЛЛОГЕРЦЫ 10**3
@@ -151,6 +164,7 @@ class CpuFrequency:
         with open(f'/sys/devices/system/cpu/cpu{self._cpu_id}/cpufreq/scaling_available_governors', 'rt') as f:
             return f.read().replace('\n','').split(' ')
 
+    @use_particular_cpu
     def set_scaling_governor(self, governor: str):
         """
         :param governor: see CpuFrequency.get_scaling_available_governors
@@ -161,6 +175,14 @@ class CpuFrequency:
         with open(f'/sys/devices/system/cpu/cpu{self._cpu_id}/cpufreq/scaling_available_governors', 'wt') as f:
             return f.write(governor)
 
+    @use_particular_cpu
+    def get_scaling_governor(self):
+        with open(f'/sys/devices/system/cpu/cpu{self._cpu_id}/cpufreq/scaling_available_governors', 'rt') as f:
+            return f.read().replace('\n','')
+
+    def set_scaling_governor_for_all(self, governor: str):
+        for c in self.cpu:
+            c.set_scaling_governor(governor)
 
 class Constraint:
     """Ограничение пакета RAPL. Описаны не все параметры. Только обязательные."""
