@@ -6,7 +6,7 @@ from PySide6.QtUiTools import QUiLoader
 from PySide6.QtCore import QTimer, Qt
 import logging
 from widget_rapl import RAPLWidget
-from service import IntelPStateDriver, CpuFrequency
+from service import IntelPStateDriver, CpuFrequency, BatteryService
 
 _logger = logging.getLogger(__name__)
 _logger.setLevel(logging.DEBUG)
@@ -35,12 +35,17 @@ class MainWindow(QMainWindow):
 
         # --- Logic --
         self.cpuFrequency = CpuFrequency()
+        self.batteryService = BatteryService()
 
         # --- again UI ---
         self.ui.label_driver_name.setText(self.cpuFrequency.cpu[0].get_driver_name())
         self.ui.comboBox_scaling_governor.addItems(self.cpuFrequency.cpu[0].get_scaling_available_governors())
         self.ui.comboBox_scaling_governor.setCurrentText(self.cpuFrequency.cpu[0].get_scaling_governor())
         self.ui.comboBox_scaling_governor.currentTextChanged.connect(self.comboBox_scaling_governor_currentTextChanged)
+        self.ui.spinBox_start_charging.setValue(self.batteryService.get_charge_control_thresholds()[0])
+        self.ui.spinBox_stop_charging.setValue(self.batteryService.get_charge_control_thresholds()[1])
+        self.ui.spinBox_start_charging.valueChanged.connect(self.spinBox_start_stop_charging_valueChanged)
+        self.ui.spinBox_stop_charging.valueChanged.connect(self.spinBox_start_stop_charging_valueChanged)
 
         # --- Timers ---
         self.timer_update_tab_intelpstate = QTimer()
@@ -49,6 +54,12 @@ class MainWindow(QMainWindow):
         self.timer_update_tab_cpufrequency = QTimer()
         self.timer_update_tab_cpufrequency.timeout.connect(self.update_timer_update_tab_cpufrequency)
         self.timer_update_tab_cpufrequency.start(2000)
+
+    def spinBox_start_stop_charging_valueChanged(self):
+        self.batteryService.set_charge_control_thresholds(
+            self.ui.spinBox_start_charging.value(),
+            self.ui.spinBox_stop_charging.value()
+        )
 
     def show(self):
         self.ui.show()
