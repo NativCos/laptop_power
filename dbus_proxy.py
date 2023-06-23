@@ -55,7 +55,7 @@ class Turbopstates:
 @dbus_interface("world.nkt.laptoppower.cpufrequency")
 class Cpufrequency:
     OBJECT_INTERFACE = "world.nkt.laptoppower.cpufrequency"
-    OBJECT_PATH = '/intelpstatedriver/cpufrequency'
+    OBJECT_PATH = '/cpufrequency'
 
     def SetScalingGovernor(self, cpu_id: Int, governor: Str):
         service.CpuFrequency().cpu[cpu_id].set_scaling_governor(governor)
@@ -64,7 +64,7 @@ class Cpufrequency:
 @dbus_interface("world.nkt.laptoppower.intelpowercappingframework")
 class Intelpowercappingframework:
     OBJECT_INTERFACE = "world.nkt.laptoppower.intelpowercappingframework"
-    OBJECT_PATH = '/intelpstatedriver/intelpowercappingframework'
+    OBJECT_PATH = '/intelpowercappingframework'
 
     def __init__(self):
         self.ipowerframe = service.IntelPowerCappingFramework()
@@ -87,7 +87,7 @@ class Intelpowercappingframework:
 @dbus_interface("world.nkt.laptoppower.intelpowercappingframework.long_term")
 class Constraintlongterm:
     OBJECT_INTERFACE = "world.nkt.laptoppower.intelpowercappingframework.long_term"
-    OBJECT_PATH = '/intelpstatedriver/intelpowercappingframework/long_term'
+    OBJECT_PATH = '/intelpowercappingframework/long_term'
 
     def __init__(self):
         self.ipowerframe = service.IntelPowerCappingFramework()
@@ -102,7 +102,7 @@ class Constraintlongterm:
 @dbus_interface("world.nkt.laptoppower.intelpowercappingframework.short_term")
 class Constraintshortterm:
     OBJECT_INTERFACE = "world.nkt.laptoppower.intelpowercappingframework.short_term"
-    OBJECT_PATH = '/intelpstatedriver/intelpowercappingframework/short_term'
+    OBJECT_PATH = '/intelpowercappingframework/short_term'
 
     def __init__(self):
         self.ipowerframe = service.IntelPowerCappingFramework()
@@ -113,6 +113,16 @@ class Constraintshortterm:
     def SetTimeWindowUs(self, limit: Int):
         self.ipowerframe.short_term.set_time_window_us(limit)
 
+@dbus_interface("world.nkt.laptoppower.batteryservice")
+class Batteryservice:
+    OBJECT_INTERFACE = "world.nkt.laptoppower.batteryservice"
+    OBJECT_PATH = '/batteryservice'
+
+    def __init__(self):
+        self._batteryservice = service.BatteryService()
+
+    def Setchargecontrolthresholds(self, start_charge: Int, stop_charge: Int):
+        self._batteryservice.set_charge_control_thresholds(int(start_charge), int(stop_charge))
 
 class GetDBusInterfaceProxyOf:
     def __new__(cls, *args, **kwargs):
@@ -169,3 +179,9 @@ class GetDBusInterfaceProxyOf:
         if not hasattr(self, '_constraintshortterm'):
             self._constraintshortterm = InterfaceProxy(self.bus, DBUS_SERVICE_NAME, Constraintshortterm.OBJECT_PATH, Constraintshortterm.OBJECT_INTERFACE)
         return self._constraintshortterm
+
+    @property
+    def Batteryservice(self):
+        if not hasattr(self, '_batteryservice'):
+            self._batteryservice = InterfaceProxy(self.bus, DBUS_SERVICE_NAME, Batteryservice.OBJECT_PATH, Batteryservice.OBJECT_INTERFACE)
+        return self._batteryservice

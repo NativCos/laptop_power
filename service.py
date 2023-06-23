@@ -393,9 +393,12 @@ class BatteryService:
             return start_charge, stop_charge
 
     def set_charge_control_thresholds(self, start_charge: int, stop_charge: int):
+        if os.getuid() != 0:
+            dbus_proxy.GetDBusInterfaceProxyOf().Batteryservice.Setchargecontrolthresholds(start_charge, stop_charge)
+            return
         if start_charge < 0 or start_charge > 100 or stop_charge <= 0 or stop_charge > 100:
             raise ValueError('start_charge < 0 or start_charge > 100 or stop_charge <= 0 or stop_charge > 100')
-        with open('/sys/devices/platform/huawei-wmi/charge_control_thresholds', 'rt') as f:
+        with open('/sys/devices/platform/huawei-wmi/charge_control_thresholds', 'wt') as f:
             f.write(f"{start_charge} {stop_charge}")
 
     @staticmethod
