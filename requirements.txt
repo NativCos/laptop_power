@@ -2,5 +2,5 @@ plotly~=5.15.0
 matplotlib~=3.7.1
 numpy~=1.24.3
 SQLAlchemy~=1.4.44
-PyQt6~=6.5.0
-dasbus
+dasbus~=1.7
+PySide6~=6.5.0
