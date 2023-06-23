@@ -7,7 +7,7 @@ import logging
 from dasbus.server.interface import dbus_interface, dbus_signal
 from dasbus.connection import SystemMessageBus
 from dasbus.client.proxy import InterfaceProxy
-from dasbus.typing import Str, Int, Double, Bool
+from dasbus.typing import Str, Int, Bool, List, Double
 
 import service
 
@@ -69,9 +69,8 @@ class Intelpowercappingframework:
     def __init__(self):
         self.ipowerframe = service.IntelPowerCappingFramework()
 
-    def GetEnergyUj(self) -> Str:
-        # TODO не умею через dbus передавать double
-        return str(self.ipowerframe.get_energy_uj())
+    def GetEnergyUj(self) -> Double:
+        return self.ipowerframe.get_energy_uj()
 
     def DisableMmioRapl(self):
         self.ipowerframe.disable_mmio_rapl()
@@ -79,9 +78,8 @@ class Intelpowercappingframework:
     def EnableMmioRapl(self):
         self.ipowerframe.enable_mmio_rapl()
 
-    def GetCurrentWatts(self, time_interval: Int) -> Str:
-        # TODO не умею через dbus передавать double
-        return str(self.ipowerframe.get_current_watts(int(time_interval)))
+    def GetCurrentWatts(self, time_interval: Int) -> Double:
+        return self.ipowerframe.get_current_watts(int(time_interval))
 
 
 @dbus_interface("world.nkt.laptoppower.intelpowercappingframework.long_term")
