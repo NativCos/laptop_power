@@ -35,6 +35,7 @@ def main():
         dbus_proxy.Intelpowercappingframework(),
         dbus_proxy.Constraintlongterm(),
         dbus_proxy.Constraintshortterm(),
+        dbus_proxy.Batteryservice()
     ]
     for obj in objs:
         bus.publish_object(obj.OBJECT_PATH, obj)
