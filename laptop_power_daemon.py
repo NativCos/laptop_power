@@ -12,10 +12,8 @@ import logging
 
 import dbus_proxy
 
-
 _logger = logging.getLogger(__name__)
 _logger.setLevel(logging.DEBUG)
-_logger.addHandler(logging.StreamHandler())
 
 
 def my_loop():
@@ -23,7 +21,7 @@ def my_loop():
         time.sleep(1.0)
 
 
-def main():
+def registration_dbus_interfaces():
     bus = SystemMessageBus()
     bus.register_service(dbus_proxy.DBUS_SERVICE_NAME)
 
@@ -40,12 +38,16 @@ def main():
     for obj in objs:
         bus.publish_object(obj.OBJECT_PATH, obj)
 
+
+def main():
+    registration_dbus_interfaces()
+
     threading.Thread(target=my_loop, daemon=True).start()  # Warning it is daemon
     loop = DasBusEventLoop()
-    _logger.debug('starting loop...')
     loop.run()
 
 
 if __name__ == '__main__':
     _logger.setLevel(logging.DEBUG)
+    _logger.addHandler(logging.StreamHandler())
     main()
