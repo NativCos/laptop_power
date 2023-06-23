@@ -12,7 +12,7 @@ _logger.setLevel(logging.DEBUG)
 
 
 def get_data(session):
-    time = 60 * 10  # 10 minutes
+    time = 60 * 60 * 4  # 4 hour 
     data = session.query(Battery) \
         .where(Battery.date > datetime.datetime.now() - datetime.timedelta(seconds=time)) \
         .order_by(Battery.date) \
@@ -22,8 +22,8 @@ def get_data(session):
 
 def show_charts(data):
     YY = []
-    for d in data:
-        YY.append(d.power_now / pow(10, 6))
+    for i in range(len(data)):
+        YY.append(data[i].power_now / 10**6)
 
     window_size = 18
     for i in range(len(YY) - window_size):
