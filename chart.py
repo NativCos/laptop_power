@@ -9,7 +9,6 @@ import logging
 
 _logger = logging.getLogger(__name__)
 _logger.setLevel(logging.DEBUG)
-_logger.addHandler(logging.StreamHandler())
 
 
 def get_data(session):
@@ -38,11 +37,11 @@ def show_charts(data):
 
 def main():
     data = get_data(DBSession())
-    _logger.debug(data[0])
     BatteryService.calc_times(data)
     show_charts(data)
 
 
 if __name__ == '__main__':
-    _logger.setLevel(logging.WARNING)
+    _logger.addHandler(logging.StreamHandler())
+    _logger.setLevel(logging.DEBUG)
     main()
