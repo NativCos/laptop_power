@@ -43,7 +43,7 @@ class MainWindow(QMainWindow):
         self.ui.comboBox_scaling_governor.setCurrentText(self.cpuFrequency.cpu[0].get_scaling_governor())
         self.ui.comboBox_scaling_governor.currentTextChanged.connect(self.comboBox_scaling_governor_currentTextChanged)
         self.ui.comboBox_energy_performance_preference.addItems(self.cpuFrequency.cpu[0].get_energy_performance_available_preferences())
-        self.ui.comboBox_energy_performance_preference.setCurrentText(self..cpuFrequency.cpu[0].get_energy_performance_preference())
+        self.ui.comboBox_energy_performance_preference.setCurrentText(self.cpuFrequency.cpu[0].get_energy_performance_preference())
         self.ui.comboBox_energy_performance_preference.currentTextChanged.connect(self.comboBox_energy_performance_preference_currentTextChanged)
         self.ui.spinBox_start_charging.setValue(self.batteryService.get_charge_control_thresholds()[0])
         self.ui.spinBox_stop_charging.setValue(self.batteryService.get_charge_control_thresholds()[1])
