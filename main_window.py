@@ -42,6 +42,9 @@ class MainWindow(QMainWindow):
         self.ui.comboBox_scaling_governor.addItems(self.cpuFrequency.cpu[0].get_scaling_available_governors())
         self.ui.comboBox_scaling_governor.setCurrentText(self.cpuFrequency.cpu[0].get_scaling_governor())
         self.ui.comboBox_scaling_governor.currentTextChanged.connect(self.comboBox_scaling_governor_currentTextChanged)
+        self.ui.comboBox_energy_performance_preference.addItems(self.cpuFrequency.cpu[0].get_energy_performance_available_preferences())
+        self.ui.comboBox_energy_performance_preference.setCurrentText(self..cpuFrequency.cpu[0].get_energy_performance_preference())
+        self.ui.comboBox_energy_performance_preference.currentTextChanged.connect(self.comboBox_energy_performance_preference_currentTextChanged)
         self.ui.spinBox_start_charging.setValue(self.batteryService.get_charge_control_thresholds()[0])
         self.ui.spinBox_stop_charging.setValue(self.batteryService.get_charge_control_thresholds()[1])
         self.ui.spinBox_start_charging.valueChanged.connect(self.spinBox_start_stop_charging_valueChanged)
@@ -66,6 +69,9 @@ class MainWindow(QMainWindow):
 
     def comboBox_scaling_governor_currentTextChanged(self, text):
         self.cpuFrequency.set_scaling_governor_for_all(text)
+
+    def comboBox_energy_performance_preference_currentTextChanged(self, text):
+        self.cpuFrequency.set_energy_performance_preference_for_all(text)
 
     def update_timer_update_tab_cpufrequency(self):
         self.ui.comboBox_scaling_governor.setCurrentText(self.cpuFrequency.cpu[0].get_scaling_governor())

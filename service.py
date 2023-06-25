@@ -128,6 +128,30 @@ class CpuFrequency:
         return wrapper
 
     @use_particular_cpu
+    def get_energy_performance_available_preferences(self) -> list:
+        with open(f'/sys/devices/system/cpu/cpu{self._cpu_id}/cpufreq/energy_performance_available_preferences', 'rt') as f:
+            return f.read().replace('\n', '').split(' ')
+
+    @use_particular_cpu
+    def get_energy_performance_preference(self) -> str:
+        """Current value of the energy vs performance hint for the given policy (or the CPU represented by it)."""
+        with open(f'/sys/devices/system/cpu/cpu{self._cpu_id}/cpufreq/energy_performance_preference', 'rt') as f:
+            return f.read().replace('\n', '')
+    
+    @use_particular_cpu
+    def set_energy_performance_preference(self, preference: str):
+        """Current value of the energy vs performance hint for the given policy (or the CPU represented by it)."""
+        with open(f'/sys/devices/system/cpu/cpu{self._cpu_id}/cpufreq/energy_performance_preference', 'wt') as f:
+            return f.write(preference)
+
+    def set_energy_performance_preference_for_all(self, preference: str):
+        if os.getuid() != 0:  # is not "root' user
+            dbus_proxy.GetDBusInterfaceProxyOf().Cpufrequency.Setenergyperformancepreferenceforall(preference)
+            return
+        for c in self.cpu:
+            c.set_energy_performance_preference(preference)
+
+    @use_particular_cpu
     def get_driver_name(self):
         """лучше чтобы было intel_pstate"""
         with open(f'/sys/devices/system/cpu/cpu{self._cpu_id}/cpufreq/scaling_driver', 'rt') as f:
@@ -165,6 +189,11 @@ class CpuFrequency:
             return f.read().replace('\n','').split(' ')
 
     @use_particular_cpu
+    def get_scaling_governor(self):
+        with open(f'/sys/devices/system/cpu/cpu{self._cpu_id}/cpufreq/scaling_governor', 'rt') as f:
+            return f.read().replace('\n','')
+
+    @use_particular_cpu
     def set_scaling_governor(self, governor: str):
         """
         :param governor: see CpuFrequency.get_scaling_available_governors
@@ -174,11 +203,6 @@ class CpuFrequency:
             return
         with open(f'/sys/devices/system/cpu/cpu{self._cpu_id}/cpufreq/scaling_governor', 'wt') as f:
             return f.write(governor)
-
-    @use_particular_cpu
-    def get_scaling_governor(self):
-        with open(f'/sys/devices/system/cpu/cpu{self._cpu_id}/cpufreq/scaling_governor', 'rt') as f:
-            return f.read().replace('\n','')
 
     def set_scaling_governor_for_all(self, governor: str):
         for c in self.cpu:

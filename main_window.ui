@@ -14,11 +14,11 @@
    <string>Laptop Power</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout">
+   <layout class="QVBoxLayout" name="verticalLayout_3">
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tab_rapl">
        <attribute name="title">
@@ -137,8 +137,8 @@
          <rect>
           <x>10</x>
           <y>10</y>
-          <width>381</width>
-          <height>121</height>
+          <width>531</width>
+          <height>171</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -161,9 +161,9 @@
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <layout class="QHBoxLayout" name="horizontalLayout_5">
            <item>
-            <widget class="QLabel" name="label_5">
+            <widget class="QLabel" name="label_7">
              <property name="text">
               <string>Set scaling governor</string>
              </property>
@@ -171,6 +171,24 @@
            </item>
            <item>
             <widget class="QComboBox" name="comboBox_scaling_governor">
+             <property name="insertPolicy">
+              <enum>QComboBox::NoInsert</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_4">
+           <item>
+            <widget class="QLabel" name="label_5">
+             <property name="text">
+              <string>Set energy_performance_preference (EPP)</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="comboBox_energy_performance_preference">
              <property name="insertPolicy">
               <enum>QComboBox::NoInsert</enum>
              </property>

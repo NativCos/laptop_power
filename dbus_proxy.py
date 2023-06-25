@@ -60,6 +60,9 @@ class Cpufrequency:
     def SetScalingGovernor(self, cpu_id: Int, governor: Str):
         service.CpuFrequency().cpu[cpu_id].set_scaling_governor(governor)
 
+    def Setenergyperformancepreferenceforall(self, preference: Str):
+        service.CpuFrequency().set_energy_performance_preference_for_all(preference)
+
 
 @dbus_interface("world.nkt.laptoppower.intelpowercappingframework")
 class Intelpowercappingframework:
