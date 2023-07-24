@@ -130,7 +130,7 @@ class CpuFrequency:
     @use_particular_cpu
     def get_energy_performance_available_preferences(self) -> list:
         with open(f'/sys/devices/system/cpu/cpu{self._cpu_id}/cpufreq/energy_performance_available_preferences', 'rt') as f:
-            return f.read().replace('\n', '').split(' ')
+            return f.read().replace('\n', '').split(' ')[:-1]
 
     @use_particular_cpu
     def get_energy_performance_preference(self) -> str:
@@ -142,7 +142,7 @@ class CpuFrequency:
     def set_energy_performance_preference(self, preference: str):
         """Current value of the energy vs performance hint for the given policy (or the CPU represented by it)."""
         with open(f'/sys/devices/system/cpu/cpu{self._cpu_id}/cpufreq/energy_performance_preference', 'wt') as f:
-            return f.write(preference)
+            f.write(preference)
 
     def set_energy_performance_preference_for_all(self, preference: str):
         if os.getuid() != 0:  # is not "root' user

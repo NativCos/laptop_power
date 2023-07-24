@@ -71,10 +71,6 @@ class RAPLWidget(QWidget):
         self.timer.timeout.connect(self.rapl_refresh)
         self.timer.start(2000)
 
-        layout = QtWidgets.QVBoxLayout()
-        layout.addWidget(PlotViewer())
-        self.ui.widget_graph.setLayout(layout)
-
         self.ui.pushButton_edit.clicked.connect(self.pushButton_edit_clicked)
         self.ui.pushButton_cancel.clicked.connect(self.pushButton_cancel_clicked)
         self.ui.pushButton_apply.clicked.connect(self.pushButton_apply_clicked)
