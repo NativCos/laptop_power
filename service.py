@@ -7,6 +7,8 @@ import threading
 import time
 import logging
 
+import deprecation
+
 import dbus_proxy
 from model import Battery
 from utils import RingBuffer
@@ -15,6 +17,25 @@ from utils import RingBuffer
 _logger = logging.getLogger(__name__)
 _logger.setLevel(logging.DEBUG)
 _logger.addHandler(logging.StreamHandler())
+
+class DPTF:
+    """Intel(R) Dynamic Platform and Thermal Framework (DPTF)
+
+    Intel(R) Dynamic Platform and Thermal Framework (DPTF) is a platform level hardware/software solution
+    for power and thermal management.
+    As a container for multiple power/thermal technologies, DPTF provides a coordinated approach for different policies
+    to effect the hardware state of a system.
+
+    See else https://docs.kernel.org/driver-api/thermal/intel_dptf.html
+    """
+    @staticmethod
+    def get_tcc_offset():
+        """TCC offset from the critical temperature where hardware will throttle CPU.
+        By design the critical temperature is 100 C. But it can be decrees and
+        by default it is 10 that mean 100C - 10C = 90C
+        """
+        with open("/sys/bus/pci/devices/0000:00:04.0/tcc_offset_degree_celsius", 'rt') as f:
+            return f.read().replace('\n', '')
 
 
 class IntelPStateDriver:
@@ -83,6 +104,7 @@ class IntelPStateDriver:
             return int(f.read())
 
     @staticmethod
+    @deprecation.deprecated()
     def set_energy_perf_bias_for_all_cpu(epb: int):
         """The Intel performance and energy bias hint (EPB) is an interface provided by Intel CPUs
         to allow for user space to specify the desired power-performance tradeoff,
@@ -207,6 +229,7 @@ class CpuFrequency:
     def set_scaling_governor_for_all(self, governor: str):
         for c in self.cpu:
             c.set_scaling_governor(governor)
+
 
 class Constraint:
     """Ограничение пакета RAPL. Описаны не все параметры. Только обязательные."""
