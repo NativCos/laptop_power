@@ -18,6 +18,70 @@ _logger = logging.getLogger(__name__)
 _logger.setLevel(logging.DEBUG)
 _logger.addHandler(logging.StreamHandler())
 
+
+class GTSysFsDriver:
+    """Generic Thermal Sysfs driver
+    see else: https://docs.kernel.org/driver-api/thermal/sysfs-api.html
+    """
+    thermal_points = None
+    """list[HWMONClass]"""
+
+    class HWMONClass:
+        def __init__(self, base_path, number_temp):
+            self.base_path = base_path
+            self.number_temp = number_temp
+            self.file_critic_temperature = open(os.path.join(self.base_path, f'temp{self.number_temp}_crit'), 'rt')
+            self.file_critic_alarm_temperature = open(os.path.join(self.base_path, f'temp{self.number_temp}_crit_alarm'), 'rt')
+            self.file_input = open(os.path.join(self.base_path, f'temp{self.number_temp}_input'), 'rt')
+            self.file_label = open(os.path.join(self.base_path, f'temp{self.number_temp}_label'), 'rt')
+
+        @property
+        def critic_temperature(self) -> int:
+            """
+            :return: The degree Celsius
+            """
+            self.file_critic_temperature.seek(0)
+            return int(self.file_critic_temperature.read()) // 1000
+
+        @property
+        def critic_alarm_temperature(self) -> bool:
+            self.file_critic_alarm_temperature.seek(0)
+            return False if '0' in self.file_critic_alarm_temperature.read() else True
+
+        @property
+        def input(self) -> int:
+            """
+            :return: The degree Celsius
+            """
+            self.file_input.seek(0)
+            return int(self.file_input.read()) // 1000
+
+        @property
+        def label(self) -> str:
+            self.file_label.seek(0)
+            return self.file_label.read().replace('\n', '')
+
+    def __init__(self):
+        hwmon_i = None
+        for hwmon_i in os.listdir('/sys/class/hwmon/'):
+            with open(f'/sys/class/hwmon/{hwmon_i}/name', 'rt') as f:
+                if 'coretemp' in f.read():
+                    break  # we found CPU temperature
+
+        all_files = os.listdir(f'/sys/class/hwmon/{hwmon_i}')
+        all_files.sort()
+        max_index = 1
+        for max_index in range(1,999):
+            if f'temp{max_index}_label' in all_files:
+                continue
+            else:
+                max_index -= 1
+                break
+        self.thermal_points = list()
+        for index in range(1, max_index+1):
+            self.thermal_points.append(GTSysFsDriver.HWMONClass(f'/sys/class/hwmon/{hwmon_i}', index))
+
+
 class DPTF:
     """Intel(R) Dynamic Platform and Thermal Framework (DPTF)
 

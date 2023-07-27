@@ -6,7 +6,7 @@ from PySide6.QtUiTools import QUiLoader
 from PySide6.QtCore import QTimer, Qt
 import logging
 from widget_rapl import RAPLWidget
-from service import IntelPStateDriver, CpuFrequency, BatteryService
+from service import IntelPStateDriver, CpuFrequency, BatteryService, GTSysFsDriver, DPTF
 
 _logger = logging.getLogger(__name__)
 _logger.setLevel(logging.DEBUG)
@@ -36,6 +36,7 @@ class MainWindow(QMainWindow):
         # --- Logic --
         self.cpuFrequency = CpuFrequency()
         self.batteryService = BatteryService()
+        self.gtsysfsdriver = GTSysFsDriver()
 
         # --- again UI ---
         self.ui.label_driver_name.setText(self.cpuFrequency.cpu[0].get_driver_name())
@@ -58,6 +59,17 @@ class MainWindow(QMainWindow):
         self.timer_update_tab_cpufrequency = QTimer()
         self.timer_update_tab_cpufrequency.timeout.connect(self.update_timer_update_tab_cpufrequency)
         self.timer_update_tab_cpufrequency.start(2000)
+        self.timer_update_tab_temperature = QTimer()
+        self.timer_update_tab_temperature.timeout.connect(self.update_timer_update_tab_temperature)
+        self.timer_update_tab_temperature.start(800)
+
+    def update_timer_update_tab_temperature(self):
+        text = ""
+        for t_p in self.gtsysfsdriver.thermal_points:
+            text += t_p.label + '\t' + str(t_p.input) + '°C \n'
+        text += 'temp offset \t -' + str(DPTF.get_tcc_offset()) + '°C \n'
+        text += 'hardware max temp \t 100°C \n'
+        self.ui.textEdit_temperature.setText(text)
 
     def spinBox_start_stop_charging_valueChanged(self):
         self.batteryService.set_charge_control_thresholds(
