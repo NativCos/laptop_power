@@ -12,7 +12,7 @@ _logger.setLevel(logging.DEBUG)
 
 
 def get_data(session):
-    time = 60 * 60 * 4  # 4 hour 
+    time = 60 * 5  # 5 min
     data = session.query(Battery) \
         .where(Battery.date > datetime.datetime.now() - datetime.timedelta(seconds=time)) \
         .order_by(Battery.date) \

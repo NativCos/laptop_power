@@ -31,7 +31,7 @@ class Tracking:
     def once_track_battery_async(self):
         self.db_session.add(self._batteryservice.get())
 
-    def track(self, session):
+    async def track(self, session):
         delay = 1  # seconds
         max_time_count = 10  # every seconds
         max_time_count = max_time_count / delay

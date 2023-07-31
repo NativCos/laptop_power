@@ -68,7 +68,7 @@ class MainWindow(QMainWindow):
         for t_p in self.gtsysfsdriver.thermal_points:
             text += t_p.label + '\t' + str(t_p.input) + '°C \n'
         text += 'temp offset \t -' + str(DPTF.get_tcc_offset()) + '°C \n'
-        text += 'hardware max temp \t 100°C \n'
+        text += f'hardware max temp \t {str(self.gtsysfsdriver.thermal_points[0].critic_temperature)}°C \n'
         self.ui.textEdit_temperature.setText(text)
 
     def spinBox_start_stop_charging_valueChanged(self):
