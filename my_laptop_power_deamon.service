@@ -1,0 +1,24 @@
+[Unit]
+Description=My Laptop Power Daemon service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/bash -c "cd /usr/local/src/laptop_power; source venv/bin/activate; ./laptop_power_daemon.py"
+Restart=always
+ProtectSystem=full
+PrivateTmp=true
+InaccessibleDirectories=/home
+CapabilityBoundingSet=
+NoNewPrivileges=true
+PrivateDevices=true
+ProtectHome=true
+ProtectControlGroups=yes
+ProtectKernelModules=yes
+ProtectClock=true
+ProtectKernelLogs=true
+ProtectHostname=true
+PrivateNetwork=true
+MemoryDenyWriteExecute=true
+
+[Install]
+WantedBy=multi-user.target
