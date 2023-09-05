@@ -4,8 +4,8 @@ from PySide6.QtCore import Qt
 from PySide6.QtUiTools import QUiLoader
 from PySide6 import QtWidgets, QtCore
 from PySide6.QtCore import QTimer
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-import matplotlib.pyplot as plt
+#from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+#import matplotlib.pyplot as plt
 import logging
 import sys
 
@@ -23,12 +23,12 @@ class PlotViewer(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super(PlotViewer, self).__init__(parent)
 
-        self.figure = plt.figure(figsize=(5, 5))
-        self.figureCanvas = FigureCanvas(self.figure)
+        #self.figure = plt.figure(figsize=(5, 5))
+        #self.figureCanvas = FigureCanvas(self.figure)
 
-        layout = QtWidgets.QVBoxLayout()
-        layout.addWidget(self.figureCanvas)
-        self.setLayout(layout)
+        #layout = QtWidgets.QVBoxLayout()
+        #layout.addWidget(self.figureCanvas)
+        #self.setLayout(layout)
 
         self.intelrapl = IntelPowerCappingFramework()
         self.buffer = RingBuffer(30)
@@ -46,12 +46,12 @@ class PlotViewer(QtWidgets.QWidget):
         self.buffer.append(w)
         y = self.buffer.get_last(self.buffer.size)
 
-        ax = self.figure.add_subplot(111)
-        ax.plot(x, y, linewidth=2.0)
-        ax.set(xlabel='time (s)', ylabel='Watts', ylim=(0, 30))
-        ax.grid()
-        self.figure.canvas.draw()
-        self.figure.canvas.flush_events()
+        #ax = self.figure.add_subplot(111)
+        #ax.plot(x, y, linewidth=2.0)
+        #ax.set(xlabel='time (s)', ylabel='Watts', ylim=(0, 30))
+        #ax.grid()
+        #self.figure.canvas.draw()
+        #self.figure.canvas.flush_events()
 
 
 class RAPLWidget(QWidget):
