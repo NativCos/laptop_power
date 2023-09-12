@@ -7,7 +7,7 @@
 import time
 from dasbus.connection import SystemMessageBus
 from dasbus.loop import EventLoop as DasBusEventLoop
-import threading
+#import threading
 import logging
 
 import dbus_proxy
@@ -42,7 +42,7 @@ def registration_dbus_interfaces():
 def main():
     registration_dbus_interfaces()
 
-    threading.Thread(target=my_loop, daemon=True).start()  # Warning it is daemon
+    #threading.Thread(target=my_loop, daemon=True).start()  # Warning it is daemon
     loop = DasBusEventLoop()
     loop.run()
 

@@ -6,7 +6,6 @@ import os
 import threading
 import time
 import logging
-
 import deprecation
 
 import dbus_proxy

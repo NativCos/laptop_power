@@ -1,8 +1,6 @@
 """
 В именах методов подчеркивания нельзя
 """
-import grp
-import os
 import logging
 from dasbus.server.interface import dbus_interface, dbus_signal
 from dasbus.connection import SystemMessageBus
