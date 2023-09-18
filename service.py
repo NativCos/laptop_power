@@ -408,7 +408,11 @@ class IntelPowerCappingFramework:
             return dbus_proxy.GetDBusInterfaceProxyOf().Intelpowercappingframework.GetEnergyUj()
         if hasattr(self, '_linux_energy_uj_file'):
             self._linux_energy_uj_file = open(self._SYSFS_MASTER_PACKAGE_MSR + '/energy_uj', 'rt')
-        return int(self._linux_energy_uj_file.read())
+        value_str = ''
+        while value_str == '':
+            value_str = self._linux_energy_uj_file.read()
+        value_int = int(value_str)
+        return value_int
 
     def disable_mmio_rapl(self):
         if os.getuid() != 0:  # is not "root' user
