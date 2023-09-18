@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 import sys
-from PySide6.QtWidgets import QMainWindow, QApplication, QVBoxLayout
-from PySide6 import QtWidgets, QtCore
-from PySide6.QtUiTools import QUiLoader
-from PySide6.QtCore import QTimer, Qt
 import logging
+from PySide6.QtUiTools import QUiLoader
+from PySide6.QtCore import QTimer, Qt, QCoreApplication
+from PySide6.QtWidgets import QMainWindow, QApplication, QVBoxLayout, QSystemTrayIcon, QMenu
+from PySide6.QtGui import QIcon, QAction
+
 from widget_rapl import RAPLWidget
 from service import IntelPStateDriver, CpuFrequency, BatteryService, GTSysFsDriver, DPTF
 
@@ -23,15 +24,11 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.ui)
         self.setLayout(layout)
         rapl = RAPLWidget()
-        layout = QtWidgets.QVBoxLayout()
+        layout = QVBoxLayout()
         layout.addWidget(rapl)
         self.ui.tab_rapl.setLayout(layout)
 
-        self.ui.menu.triggered.connect(QtCore.QCoreApplication.instance().quit)
-
-        self.ui.checkBox_speedshift.stateChanged.connect(self.checkBox_speedshift_stateChanged)
-        self.ui.checkBox_turbo_pstates.stateChanged.connect(self.checkBox_turbo_pstates_stateChanged)
-        self.ui.spinBox_intel_epb.valueChanged.connect(self.spinBox_intel_epb_valueChanged)
+        self.ui.menu.triggered.connect(QCoreApplication.instance().quit)
 
         # --- Logic --
         self.cpuFrequency = CpuFrequency()
@@ -51,6 +48,26 @@ class MainWindow(QMainWindow):
         self.ui.spinBox_stop_charging.setValue(self.batteryService.get_charge_control_thresholds()[1])
         self.ui.spinBox_start_charging.valueChanged.connect(self.spinBox_start_stop_charging_valueChanged)
         self.ui.spinBox_stop_charging.valueChanged.connect(self.spinBox_start_stop_charging_valueChanged)
+        self.ui.checkBox_speedshift.stateChanged.connect(self.checkBox_speedshift_stateChanged)
+        self.ui.checkBox_turbo_pstates.stateChanged.connect(self.checkBox_turbo_pstates_stateChanged)
+        self.ui.spinBox_intel_epb.valueChanged.connect(self.spinBox_intel_epb_valueChanged)
+
+        # add the system tray
+        self.ui.tray = QSystemTrayIcon()
+        self.ui.tray.setIcon(QIcon('icon.png'))
+        self.ui.tray.setVisible(True)
+        self.ui.tray.my_menu = QMenu()
+        self.ui.tray.my_menu.my_action_set_power_performance = QAction('Set CPU Performance')
+        self.ui.tray.my_menu.my_action_set_power_performance.triggered.connect(
+            lambda: self.cpuFrequency.set_energy_performance_preference_for_all('balance_performance')
+        )
+        self.ui.tray.my_menu.addAction(self.ui.tray.my_menu.my_action_set_power_performance)
+        self.ui.tray.my_menu.my_action_set_power_save = QAction('Set CPU PowerSave')
+        self.ui.tray.my_menu.my_action_set_power_save.triggered.connect(
+            lambda: self.cpuFrequency.set_energy_performance_preference_for_all('power')
+        )
+        self.ui.tray.my_menu.addAction(self.ui.tray.my_menu.my_action_set_power_save)
+        self.ui.tray.setContextMenu(self.ui.tray.my_menu)
 
         # --- Timers ---
         self.timer_update_tab_intelpstate = QTimer()
@@ -88,6 +105,7 @@ class MainWindow(QMainWindow):
 
     def update_timer_update_tab_cpufrequency(self):
         self.ui.comboBox_scaling_governor.setCurrentText(self.cpuFrequency.cpu[0].get_scaling_governor())
+        self.ui.comboBox_energy_performance_preference.setCurrentText(self.cpuFrequency.cpu[0].get_energy_performance_preference())
 
     def update_tab_intelpstate(self):
         self.ui.checkBox_speedshift.setChecked(IntelPStateDriver.SpeedShift.get())
