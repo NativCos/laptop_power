@@ -67,7 +67,11 @@ class MainWindow(QMainWindow):
             lambda: self.cpuFrequency.set_energy_performance_preference_for_all('power')
         )
         self.ui.tray.my_menu.addAction(self.ui.tray.my_menu.my_action_set_power_save)
+        self.ui.tray.my_menu.my_action_quit = QAction('Quit')
+        self.ui.tray.my_menu.my_action_quit.triggered.connect(QCoreApplication.instance().quit)
+        self.ui.tray.my_menu.addAction(self.ui.tray.my_menu.my_action_quit)
         self.ui.tray.setContextMenu(self.ui.tray.my_menu)
+        self.ui.tray.activated.connect(self.ui.show)
 
         # --- Timers ---
         self.timer_update_tab_intelpstate = QTimer()
@@ -110,7 +114,9 @@ class MainWindow(QMainWindow):
     def update_tab_intelpstate(self):
         self.ui.checkBox_speedshift.setChecked(IntelPStateDriver.SpeedShift.get())
         self.ui.checkBox_turbo_pstates.setChecked(IntelPStateDriver.TurboPstates.get())
+        self.ui.spinBox_intel_epb.valueChanged.disconnect(self.spinBox_intel_epb_valueChanged)
         self.ui.spinBox_intel_epb.setValue(IntelPStateDriver.get_energy_perf_bias_for_all_cpu()) # will emit valueChanged()
+        self.ui.spinBox_intel_epb.valueChanged.connect(self.spinBox_intel_epb_valueChanged)
 
     def checkBox_speedshift_stateChanged(self, state):
         if not ((self.ui.checkBox_speedshift.checkState() == Qt.CheckState.Checked) != IntelPStateDriver.SpeedShift.get()):
@@ -134,6 +140,7 @@ class MainWindow(QMainWindow):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    app.setQuitOnLastWindowClosed(False)
     w = MainWindow()
     w.show()
     sys.exit(app.exec())
