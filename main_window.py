@@ -40,10 +40,13 @@ class MainWindow(QMainWindow):
         self.ui.comboBox_scaling_governor.addItems(self.cpuFrequency.cpu[0].get_scaling_available_governors())
         self.ui.comboBox_scaling_governor.setCurrentText(self.cpuFrequency.cpu[0].get_scaling_governor())
         self.ui.comboBox_scaling_governor.currentTextChanged.connect(self.comboBox_scaling_governor_currentTextChanged)
-        self.ui.comboBox_energy_performance_preference.addItems(self.cpuFrequency.cpu[0].get_energy_performance_available_preferences())
+        self.ui.comboBox_energy_performance_preference.addItems(
+            self.cpuFrequency.cpu[0].get_energy_performance_available_preferences())
         self.ui.comboBox_energy_performance_preference.addItems("1")
-        self.ui.comboBox_energy_performance_preference.setCurrentText(self.cpuFrequency.cpu[0].get_energy_performance_preference())
-        self.ui.comboBox_energy_performance_preference.currentTextChanged.connect(self.comboBox_energy_performance_preference_currentTextChanged)
+        self.ui.comboBox_energy_performance_preference.setCurrentText(
+            self.cpuFrequency.cpu[0].get_energy_performance_preference())
+        self.ui.comboBox_energy_performance_preference.currentTextChanged.connect(
+            self.comboBox_energy_performance_preference_currentTextChanged)
         self.ui.spinBox_start_charging.setValue(self.batteryService.get_charge_control_thresholds()[0])
         self.ui.spinBox_stop_charging.setValue(self.batteryService.get_charge_control_thresholds()[1])
         self.ui.spinBox_start_charging.valueChanged.connect(self.spinBox_start_stop_charging_valueChanged)
@@ -83,6 +86,15 @@ class MainWindow(QMainWindow):
         self.timer_update_tab_temperature = QTimer()
         self.timer_update_tab_temperature.timeout.connect(self.update_timer_update_tab_temperature)
         self.timer_update_tab_temperature.start(800)
+        self.timer_update_tray_tip = QTimer()
+        self.timer_update_tray_tip \
+            .timeout \
+            .connect(
+            lambda: self.ui.tray.setToolTip(
+                str(rapl.raplservice.get_current_watts(4) / 10 ** 6)[:4] + ' Watts'
+            )
+        )
+        self.timer_update_tray_tip.start(2000)
 
     def update_timer_update_tab_temperature(self):
         text = ""
@@ -109,17 +121,20 @@ class MainWindow(QMainWindow):
 
     def update_timer_update_tab_cpufrequency(self):
         self.ui.comboBox_scaling_governor.setCurrentText(self.cpuFrequency.cpu[0].get_scaling_governor())
-        self.ui.comboBox_energy_performance_preference.setCurrentText(self.cpuFrequency.cpu[0].get_energy_performance_preference())
+        self.ui.comboBox_energy_performance_preference.setCurrentText(
+            self.cpuFrequency.cpu[0].get_energy_performance_preference())
 
     def update_tab_intelpstate(self):
         self.ui.checkBox_speedshift.setChecked(IntelPStateDriver.SpeedShift.get())
         self.ui.checkBox_turbo_pstates.setChecked(IntelPStateDriver.TurboPstates.get())
         self.ui.spinBox_intel_epb.valueChanged.disconnect(self.spinBox_intel_epb_valueChanged)
-        self.ui.spinBox_intel_epb.setValue(IntelPStateDriver.get_energy_perf_bias_for_all_cpu()) # will emit valueChanged()
+        self.ui.spinBox_intel_epb.setValue(
+            IntelPStateDriver.get_energy_perf_bias_for_all_cpu())  # will emit valueChanged()
         self.ui.spinBox_intel_epb.valueChanged.connect(self.spinBox_intel_epb_valueChanged)
 
     def checkBox_speedshift_stateChanged(self, state):
-        if not ((self.ui.checkBox_speedshift.checkState() == Qt.CheckState.Checked) != IntelPStateDriver.SpeedShift.get()):
+        if not ((
+                        self.ui.checkBox_speedshift.checkState() == Qt.CheckState.Checked) != IntelPStateDriver.SpeedShift.get()):
             return
         if self.ui.checkBox_speedshift.checkState() == Qt.CheckState.Checked:
             IntelPStateDriver.SpeedShift.enable()
@@ -127,7 +142,8 @@ class MainWindow(QMainWindow):
             IntelPStateDriver.SpeedShift.disable()
 
     def checkBox_turbo_pstates_stateChanged(self, state):
-        if not ((self.ui.checkBox_turbo_pstates.checkState() == Qt.CheckState.Checked) != IntelPStateDriver.TurboPstates.get()):
+        if not ((
+                        self.ui.checkBox_turbo_pstates.checkState() == Qt.CheckState.Checked) != IntelPStateDriver.TurboPstates.get()):
             return
         if self.ui.checkBox_turbo_pstates.checkState() == Qt.CheckState.Checked:
             IntelPStateDriver.TurboPstates.enable()
