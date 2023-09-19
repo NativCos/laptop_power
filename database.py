@@ -10,3 +10,7 @@ DBSession = sessionmaker(DBEngine)
 
 def create_schema():
     Base.metadata.create_all(DBEngine)
+
+
+if __name__ == '__main__':
+    create_schema()

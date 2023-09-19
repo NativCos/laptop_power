@@ -9,7 +9,7 @@ import logging
 import deprecation
 
 import dbus_proxy
-from model import Battery
+from model import Battery, BatteryPowerNow
 from utils import RingBuffer
 
 
@@ -452,15 +452,23 @@ class IntelPowerCappingFramework:
 class BatteryService:
     """Управление батареей ноутбука"""
     _LINUX_SYSFS_FILE = '/sys/class/power_supply/BAT0/uevent'
+    _LINUX_SYSFS_POWERNOW = '/sys/class/power_supply/BAT0/power_now'
     _uevent_file = None
+    _powernow_file = None
 
     def __init__(self):
         self._uevent_file = open(self._LINUX_SYSFS_FILE, 'rt')
+        self._powernow_file = open(self._LINUX_SYSFS_POWERNOW, 'rt')
 
     def __del__(self):
         self._uevent_file.close()
+        self._powernow_file.close()
 
-    def get(self):
+    def get_power_now(self):
+        self._powernow_file.seek(0)
+        return BatteryPowerNow(time.time_ns(), int(self._powernow_file.read()))
+
+    def get(self) -> Battery:
         power_now = None
         status = None
         capacity = None
