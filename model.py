@@ -58,3 +58,19 @@ class BatteryPowerNow(Base):
 
     def __repr__(self):
         return f"<BatteryPowerNow time_ns={self.time_ns} power_now={self.power_now}>"
+
+
+class BatteryEnergyNow(Base):
+    """информация только о текущем энергопотреблении"""
+    __tablename__ = 'batteryenerynow'
+
+    time_ns = Column(INTEGER, nullable=False, primary_key=True)
+    energy_now = Column(INTEGER, nullable=False)
+    """power now consume in micro watts (10^-6)"""
+
+    def __init__(self, time_ns, energy_now):
+        self.time_ns = time_ns
+        self.energy_now = energy_now
+
+    def __repr__(self):
+        return f"<BatteryEnergyNow time_ns={self.time_ns} energy_now={self.energy_now}>"

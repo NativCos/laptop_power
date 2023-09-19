@@ -9,7 +9,7 @@ import logging
 import deprecation
 
 import dbus_proxy
-from model import Battery, BatteryPowerNow
+from model import Battery, BatteryPowerNow, BatteryEnergyNow
 from utils import RingBuffer
 
 
@@ -453,20 +453,28 @@ class BatteryService:
     """Управление батареей ноутбука"""
     _LINUX_SYSFS_FILE = '/sys/class/power_supply/BAT0/uevent'
     _LINUX_SYSFS_POWERNOW = '/sys/class/power_supply/BAT0/power_now'
+    _LINUX_SYSFS_ENERGYNOW = '/sys/class/power_supply/BAT0/energy_now'
     _uevent_file = None
     _powernow_file = None
+    _energynow_file = None
 
     def __init__(self):
         self._uevent_file = open(self._LINUX_SYSFS_FILE, 'rt')
         self._powernow_file = open(self._LINUX_SYSFS_POWERNOW, 'rt')
+        self._energynow_file = open(self._LINUX_SYSFS_ENERGYNOW, 'rt')
 
     def __del__(self):
         self._uevent_file.close()
         self._powernow_file.close()
+        self._energynow_file.close()
 
     def get_power_now(self):
         self._powernow_file.seek(0)
         return BatteryPowerNow(time.time_ns(), int(self._powernow_file.read()))
+
+    def get_energy_now(self):
+        self._energynow_file.seek(0)
+        return BatteryEnergyNow(time.time_ns(), int(self._energynow_file.read()))
 
     def get(self) -> Battery:
         power_now = None
