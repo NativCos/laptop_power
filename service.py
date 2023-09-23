@@ -547,26 +547,26 @@ class BatteryService:
         d_energy_now = data[0].energy_now - data[-1].energy_now
         speed = d_energy_now / dtime  # (seconds). Микро-Ват-Часы делятся на секунды. да-да... Я знаю
         if speed != 0:
-            if data[0].status == Battery.Status.Discharging:
-                remaining_time_to_live = (data[-1].energy_now - (data[-1].energy_full * 6 / 100)) / speed
+            if self.get().status == Battery.Status.Discharging:
+                remaining_time_to_live = (data[-1].energy_now - (self.get().energy_full * 6 / 100)) / speed
                 """В строчке выше высчитывается оставшиеся время жизни батареи.
                    Преполагается что батарея может разрядиться только до 6%.
                    formula: (<энергии сейчас> - <6% от полной емкости>) / <скорость разрядки>"""
                 datetime_to_die = datetime.datetime.now() + datetime.timedelta(seconds=remaining_time_to_live)
                 remaining_time_to_live = datetime.timedelta(seconds=remaining_time_to_live)
-                full_time_live = data[0].energy_full / speed
+                full_time_live = self.get().energy_full / speed
                 full_time_live = datetime.timedelta(seconds=full_time_live)
 
-                result += f"Status: {data[0].status}" + '\n'
+                result += f"Status: {self.get().status}" + '\n'
                 result += f"{datetime_to_die.ctime()} time to die" + '\n'
                 result += f"{remaining_time_to_live} rest time to live in hours" + '\n'
                 result += f"{full_time_live} full time to live in hours" + '\n'
-            elif data[0].status == Battery.Status.Charging:
+            elif self.get().status == Battery.Status.Charging:
                 speed = -speed
-                remaining_time_to_done = (data[-1].energy_full - data[-1].energy_now) / speed
+                remaining_time_to_done = (self.get().energy_full - data[-1].energy_now) / speed
                 datetime_to_done = datetime.datetime.now() + datetime.timedelta(seconds=remaining_time_to_done)
 
-                result += f"Status: {data[0].status}" + '\n'
+                result += f"Status: {self.get().status}" + '\n'
                 result += f"{datetime_to_done.ctime()} time to done" + '\n'
                 result += f"{datetime.timedelta(seconds=remaining_time_to_done)} rest time to done" + '\n'
             else:
