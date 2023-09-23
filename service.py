@@ -394,7 +394,7 @@ class IntelPowerCappingFramework:
 
         self.energy_uj_buffer_by_seconds = RingBuffer(30)
         threading.Thread(daemon=True,
-                         target=self._update_energy_uj(),
+                         target=self._update_energy_uj,
                          ).start()
 
     def _update_energy_uj(self):
@@ -406,7 +406,7 @@ class IntelPowerCappingFramework:
         """"Текущие значение счётчика энергии.
         :return: int МИКРОДЖОУЛЯХ
         """
-        if os.getuid() != 0:  # is not "root' user
+        if os.getuid() != 0:  # is not 'root' user
             return dbus_proxy.GetDBusInterfaceProxyOf().Intelpowercappingframework.GetEnergyUj()
         if hasattr(self, '_linux_energy_uj_file'):
             self._linux_energy_uj_file = open(self._SYSFS_MASTER_PACKAGE_MSR + '/energy_uj', 'rt')
@@ -418,14 +418,14 @@ class IntelPowerCappingFramework:
         return value_int
 
     def disable_mmio_rapl(self):
-        if os.getuid() != 0:  # is not "root' user
+        if os.getuid() != 0:  # is not 'root' user
             dbus_proxy.GetDBusInterfaceProxyOf().Intelpowercappingframework.DisableMmioRapl()
             return
         with open(f'{self._SYSFS_MASTER_PACKAGE_MMIO}/enabled', 'wt') as f:
             f.write(str(0))
 
     def enable_mmio_rapl(self):
-        if os.getuid() != 0:  # is not "root' user
+        if os.getuid() != 0:  # is not 'root' user
             dbus_proxy.GetDBusInterfaceProxyOf().Intelpowercappingframework.EnableMmioRapl()
             return
         with open(f'{self._SYSFS_MASTER_PACKAGE_MMIO}/enabled', 'wt') as f:
@@ -440,7 +440,7 @@ class IntelPowerCappingFramework:
 
         :param time_interval int СЕКУНДЫ
         :return: float МИКРОВАТТ"""
-        if os.getuid() != 0:  # is not "root' user
+        if os.getuid() != 0:  # is not 'root' user
             return float(dbus_proxy.GetDBusInterfaceProxyOf().Intelpowercappingframework.GetCurrentWatts(time_interval))
         if time_interval <= 0:
             raise ValueError("time_interval <= 0 is meaninglessly")
