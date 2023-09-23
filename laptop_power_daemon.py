@@ -4,21 +4,14 @@
 Обеспечивает управление всеми системами питания ноутбука.
 Предоставляет доступ к информации об энергопотреблении ноутбука.
 """
-import time
 from dasbus.connection import SystemMessageBus
 from dasbus.loop import EventLoop as DasBusEventLoop
-#import threading
 import logging
 
 import dbus_proxy
 
 _logger = logging.getLogger(__name__)
 _logger.setLevel(logging.DEBUG)
-
-
-def my_loop():
-    while True:
-        time.sleep(1.0)
 
 
 def registration_dbus_interfaces():
@@ -42,7 +35,6 @@ def registration_dbus_interfaces():
 def main():
     registration_dbus_interfaces()
 
-    #threading.Thread(target=my_loop, daemon=True).start()  # Warning it is daemon
     loop = DasBusEventLoop()
     loop.run()
 

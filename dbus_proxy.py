@@ -112,6 +112,7 @@ class Constraintshortterm:
     def SetTimeWindowUs(self, limit: Int):
         self.ipowerframe.short_term.set_time_window_us(limit)
 
+
 @dbus_interface("world.nkt.laptoppower.batteryservice")
 class Batteryservice:
     OBJECT_INTERFACE = "world.nkt.laptoppower.batteryservice"
@@ -122,6 +123,7 @@ class Batteryservice:
 
     def Setchargecontrolthresholds(self, start_charge: Int, stop_charge: Int):
         self._batteryservice.set_charge_control_thresholds(int(start_charge), int(stop_charge))
+
 
 class GetDBusInterfaceProxyOf:
     def __new__(cls, *args, **kwargs):

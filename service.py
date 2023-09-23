@@ -392,14 +392,15 @@ class IntelPowerCappingFramework:
         setattr(self.mmio, 'long_term', ConstraintLongTerm(self._SYSFS_MASTER_PACKAGE_MMIO))
         setattr(self.mmio, 'short_term', ConstraintShortTerm(self._SYSFS_MASTER_PACKAGE_MMIO))
 
-        self.energy_uj_buffer_by_seconds = RingBuffer(100)
-        def update_energy_uj():
-            while True:
-                self.energy_uj_buffer_by_seconds.append(self.get_energy_uj())
-                time.sleep(1.0)
+        self.energy_uj_buffer_by_seconds = RingBuffer(30)
         threading.Thread(daemon=True,
-                         target=update_energy_uj
+                         target=self._update_energy_uj(),
                          ).start()
+
+    def _update_energy_uj(self):
+        while True:
+            self.energy_uj_buffer_by_seconds.append(self.get_energy_uj())
+            time.sleep(1.0)
 
     def get_energy_uj(self):
         """"Текущие значение счётчика энергии.
@@ -411,6 +412,7 @@ class IntelPowerCappingFramework:
             self._linux_energy_uj_file = open(self._SYSFS_MASTER_PACKAGE_MSR + '/energy_uj', 'rt')
         value_str = ''
         while value_str == '':
+            self._linux_energy_uj_file.seek(0)
             value_str = self._linux_energy_uj_file.read()
         value_int = int(value_str)
         return value_int
@@ -488,6 +490,7 @@ class BatteryService:
         energy_now = None
         energy_full_design = None
 
+        self._uevent_file.seek(0)
         for line in self._uevent_file.read().split('\n')[0:-2]:
             key, value = line.split('=')
             if key == 'POWER_SUPPLY_STATUS':
@@ -504,7 +507,6 @@ class BatteryService:
                 energy_now = int(value)
             elif key == 'POWER_SUPPLY_CAPACITY':
                 capacity = int(value)
-        self._uevent_file.seek(0)
 
         time_now = datetime.datetime.now()
         return Battery(time_now,
