@@ -8,6 +8,7 @@ from PySide6.QtGui import QIcon, QAction
 
 from widget_rapl import RAPLWidget
 from service import IntelPStateDriver, CpuFrequency, BatteryService, GTSysFsDriver, DPTF
+import track
 
 _logger = logging.getLogger(__name__)
 _logger.setLevel(logging.DEBUG)
@@ -34,6 +35,7 @@ class MainWindow(QMainWindow):
         self.cpuFrequency = CpuFrequency()
         self.batteryService = BatteryService()
         self.gtsysfsdriver = GTSysFsDriver()
+        track.start_tracking_in_new_thread()
 
         # --- again UI ---
         self.ui.label_driver_name.setText(self.cpuFrequency.cpu[0].get_driver_name())
@@ -54,6 +56,7 @@ class MainWindow(QMainWindow):
         self.ui.checkBox_speedshift.stateChanged.connect(self.checkBox_speedshift_stateChanged)
         self.ui.checkBox_turbo_pstates.stateChanged.connect(self.checkBox_turbo_pstates_stateChanged)
         self.ui.spinBox_intel_epb.valueChanged.connect(self.spinBox_intel_epb_valueChanged)
+        self.ui.pushButton_battery_time.clicked.connect(self.pushButton_battery_time_clicked)
 
         # add the system tray
         self.ui.tray = QSystemTrayIcon()
@@ -95,6 +98,9 @@ class MainWindow(QMainWindow):
             )
         )
         self.timer_update_tray_tip.start(2000)
+
+    def pushButton_battery_time_clicked(self):
+        self.ui.textEdit_battery_time.setText(self.batteryService.calc_times())
 
     def update_timer_update_tab_temperature(self):
         text = ""

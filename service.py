@@ -11,6 +11,7 @@ import deprecation
 import dbus_proxy
 from model import Battery, BatteryPowerNow, BatteryEnergyNow
 from utils import RingBuffer
+from database import DBSession
 
 
 _logger = logging.getLogger(__name__)
@@ -463,6 +464,8 @@ class BatteryService:
         self._powernow_file = open(self._LINUX_SYSFS_POWERNOW, 'rt')
         self._energynow_file = open(self._LINUX_SYSFS_ENERGYNOW, 'rt')
 
+        self._database = DBSession()
+
     def __del__(self):
         self._uevent_file.close()
         self._powernow_file.close()
@@ -470,11 +473,11 @@ class BatteryService:
 
     def get_power_now(self):
         self._powernow_file.seek(0)
-        return BatteryPowerNow(time.time_ns(), int(self._powernow_file.read()))
+        return BatteryPowerNow(datetime.datetime.now(), int(self._powernow_file.read()))
 
     def get_energy_now(self):
         self._energynow_file.seek(0)
-        return BatteryEnergyNow(time.time_ns(), int(self._energynow_file.read()))
+        return BatteryEnergyNow(datetime.datetime.now(), int(self._energynow_file.read()))
 
     def get(self) -> Battery:
         power_now = None
@@ -531,11 +534,18 @@ class BatteryService:
         with open('/sys/devices/platform/huawei-wmi/charge_control_thresholds', 'wt') as f:
             f.write(f"{start_charge} {stop_charge}")
 
-    @staticmethod
-    def calc_times(data):
-        time = (data[-1].date - data[0].date).seconds
+    def calc_times(self):
+        result = ''
+        dtime = 60 * 5  # 5 min
+        data = self._database.query(BatteryEnergyNow) \
+            .where(BatteryEnergyNow.date > datetime.datetime.now() - datetime.timedelta(seconds=dtime)) \
+            .order_by(BatteryEnergyNow.date) \
+            .all()
+        if len(data) == 0:
+            return ""
+        dtime = (data[-1].date - data[0].date).seconds
         d_energy_now = data[0].energy_now - data[-1].energy_now
-        speed = d_energy_now / time  # (seconds). Микро-Ват-Часы делятся на секунды. да-да... Я знаю
+        speed = d_energy_now / dtime  # (seconds). Микро-Ват-Часы делятся на секунды. да-да... Я знаю
         if speed != 0:
             if data[0].status == Battery.Status.Discharging:
                 remaining_time_to_live = (data[-1].energy_now - (data[-1].energy_full * 6 / 100)) / speed
@@ -547,20 +557,21 @@ class BatteryService:
                 full_time_live = data[0].energy_full / speed
                 full_time_live = datetime.timedelta(seconds=full_time_live)
 
-                print(f"Status: {data[0].status}")
-                print(f"{datetime_to_die.ctime()} time to die")
-                print(f"{remaining_time_to_live} rest time to live in hours")
-                print(f"{full_time_live} full time to live in hours")
+                result += f"Status: {data[0].status}" + '\n'
+                result += f"{datetime_to_die.ctime()} time to die" + '\n'
+                result += f"{remaining_time_to_live} rest time to live in hours" + '\n'
+                result += f"{full_time_live} full time to live in hours" + '\n'
             elif data[0].status == Battery.Status.Charging:
                 speed = -speed
                 remaining_time_to_done = (data[-1].energy_full - data[-1].energy_now) / speed
                 datetime_to_done = datetime.datetime.now() + datetime.timedelta(seconds=remaining_time_to_done)
 
-                print(f"Status: {data[0].status}")
-                print(f"{datetime_to_done.ctime()} time to done")
-                print(f"{datetime.timedelta(seconds=remaining_time_to_done)} rest time to done")
+                result += f"Status: {data[0].status}" + '\n'
+                result += f"{datetime_to_done.ctime()} time to done" + '\n'
+                result += f"{datetime.timedelta(seconds=remaining_time_to_done)} rest time to done" + '\n'
             else:
-                print("WTF? unknow battary status...")
+                result += "WTF? unknow battary status..." + '\n'
         elif speed == 0:
-            print('Status: FULL')
+            result += 'Status: FULL' + '\n'
+        return result
 

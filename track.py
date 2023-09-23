@@ -70,7 +70,7 @@ async def start_tracking():
 
 def start_tracking_in_new_thread():
     # create new thread for new asyncio event loop
-    new_thread = threading.Thread(target=asyncio.run(start_tracking()), daemon=True)
+    new_thread = threading.Thread(target=lambda: asyncio.run(start_tracking()), daemon=True, name='Tracking metrics')
     new_thread.start()
     return new_thread
 

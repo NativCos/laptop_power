@@ -48,29 +48,29 @@ class BatteryPowerNow(Base):
     """информация только о текущем энергопотреблении"""
     __tablename__ = 'batterypowernow'
 
-    time_ns = Column(INTEGER, nullable=False, primary_key=True)
+    date = Column(DATETIME, nullable=False, primary_key=True)
     power_now = Column(INTEGER, nullable=False)
     """power now consume in micro watts (10^-6)"""
 
-    def __init__(self, time_ns,power_now):
-        self.time_ns = time_ns
+    def __init__(self, date, power_now):
+        self.date = date
         self.power_now = power_now
 
     def __repr__(self):
-        return f"<BatteryPowerNow time_ns={self.time_ns} power_now={self.power_now}>"
+        return f"<BatteryPowerNow date={self.date} power_now={self.power_now}>"
 
 
 class BatteryEnergyNow(Base):
     """информация только о текущем энергопотреблении"""
     __tablename__ = 'batteryenerynow'
 
-    time_ns = Column(INTEGER, nullable=False, primary_key=True)
+    date = Column(DATETIME, nullable=False, primary_key=True)
     energy_now = Column(INTEGER, nullable=False)
     """power now consume in micro watts (10^-6)"""
 
-    def __init__(self, time_ns, energy_now):
-        self.time_ns = time_ns
+    def __init__(self, date, energy_now):
+        self.date = date
         self.energy_now = energy_now
 
     def __repr__(self):
-        return f"<BatteryEnergyNow time_ns={self.time_ns} energy_now={self.energy_now}>"
+        return f"<BatteryEnergyNow date={self.date} energy_now={self.energy_now}>"
