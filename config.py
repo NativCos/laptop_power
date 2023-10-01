@@ -2,7 +2,7 @@ import os
 
 
 class Config:
-    dataBasePath = 'sqlite:///./data.db'
+    dataBasePath = 'sqlite:///:memory:'
     """env value = LAPTOPPOWER_DATABASE"""
 
     def __new__(cls, *args, **kwargs):

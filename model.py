@@ -2,10 +2,10 @@ from sqlalchemy import Column, DATETIME, INTEGER, Enum
 from sqlalchemy.orm import declarative_base
 import enum
 
-Base = declarative_base()
+LaptopPowerDeclarativeModelBase = declarative_base()
 
 
-class Battery(Base):
+class Battery(LaptopPowerDeclarativeModelBase):
     """Информация о питании батареи ноутбука"""
     __tablename__ = 'battery'
 
@@ -44,7 +44,7 @@ class Battery(Base):
         self.energy_full_design = energy_full_design
 
 
-class BatteryPowerNow(Base):
+class BatteryPowerNow(LaptopPowerDeclarativeModelBase):
     """информация только о текущем энергопотреблении"""
     __tablename__ = 'batterypowernow'
 
@@ -60,9 +60,9 @@ class BatteryPowerNow(Base):
         return f"<BatteryPowerNow date={self.date} power_now={self.power_now}>"
 
 
-class BatteryEnergyNow(Base):
+class BatteryEnergyNow(LaptopPowerDeclarativeModelBase):
     """информация только о текущем энергопотреблении"""
-    __tablename__ = 'batteryenerynow'
+    __tablename__ = 'batteryenergynow'
 
     date = Column(DATETIME, nullable=False, primary_key=True)
     energy_now = Column(INTEGER, nullable=False)
