@@ -6,7 +6,6 @@ import os
 import threading
 import time
 import logging
-import deprecation
 
 import dbus_proxy
 from model import Battery, BatteryPowerNow, BatteryEnergyNow
@@ -168,7 +167,6 @@ class IntelPStateDriver:
             return int(f.read())
 
     @staticmethod
-    @deprecation.deprecated()
     def set_energy_perf_bias_for_all_cpu(epb: int):
         """The Intel performance and energy bias hint (EPB) is an interface provided by Intel CPUs
         to allow for user space to specify the desired power-performance tradeoff,
