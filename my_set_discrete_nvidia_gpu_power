@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# My gpu dispale with acpi call.
+
+
+case "$1" in
+	on)
+	echo "\_SB.PCI0.RP05.PXSX._ON" | sudo tee /proc/acpi/call
+	;;
+	off)
+	echo "\_SB.PCI0.RP05.PXSX._OFF" | sudo tee /proc/acpi/call
+	;;
+	*)
+	echo "use 'my_set_discrete_nvidia_gpu_power on'"
+	echo "use 'my_set_discrete_nvidia_gpu_power off'"
+	;;
+esac
+exit 0
+

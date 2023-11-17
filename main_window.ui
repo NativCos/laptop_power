@@ -15,7 +15,10 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>icon.png</normaloff>icon.png</iconset>
+    <normaloff>icon.png</normaloff>
+    <normalon>icon.png</normalon>
+    <activeoff>icon.png</activeoff>
+    <activeon>icon.png</activeon>icon.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -92,6 +95,109 @@
             <widget class="QComboBox" name="comboBox_energy_performance_preference">
              <property name="insertPolicy">
               <enum>QComboBox::NoInsert</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="tab_intelpstate">
+       <property name="font">
+        <font>
+         <family>IntelOne Mono</family>
+        </font>
+       </property>
+       <attribute name="title">
+        <string>Intel P-state</string>
+       </attribute>
+       <widget class="QWidget" name="verticalLayoutWidget">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>666</width>
+          <height>171</height>
+         </rect>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <widget class="QLabel" name="label_2">
+           <property name="font">
+            <font>
+             <family>IntelOne Mono Bold</family>
+             <pointsize>11</pointsize>
+             <weight>75</weight>
+             <italic>true</italic>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="mouseTracking">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>intel P-state scaling driver that realization Intel SpeedStep Technology</string>
+           </property>
+           <property name="textFormat">
+            <enum>Qt::AutoText</enum>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+           <property name="wordWrap">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="checkBox_speedshift">
+           <property name="text">
+            <string>Intel SpeedShift aka Hardware P-states</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="checkBox_turbo_pstates">
+           <property name="whatsThis">
+            <string extracomment="Intel allow p_state drive set CPU to turbo P states"/>
+           </property>
+           <property name="text">
+            <string>Turbo P-states</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
+            <widget class="QSpinBox" name="spinBox_intel_epb">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="whatsThis">
+              <string extracomment="0 (highest performance) to 15 (highest energy savings)"/>
+             </property>
+             <property name="maximum">
+              <number>15</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label">
+             <property name="text">
+              <string>The Intel performance and energy bias hint (EPB) (depraceted)</string>
              </property>
             </widget>
            </item>
@@ -198,109 +304,6 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </widget>
-      <widget class="QWidget" name="tab_intelpstate">
-       <property name="font">
-        <font>
-         <family>IntelOne Mono</family>
-        </font>
-       </property>
-       <attribute name="title">
-        <string>Intel P-state</string>
-       </attribute>
-       <widget class="QWidget" name="verticalLayoutWidget">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>10</y>
-          <width>666</width>
-          <height>171</height>
-         </rect>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayout">
-         <item>
-          <widget class="QLabel" name="label_2">
-           <property name="font">
-            <font>
-             <family>IntelOne Mono Bold</family>
-             <pointsize>11</pointsize>
-             <weight>75</weight>
-             <italic>true</italic>
-             <bold>true</bold>
-            </font>
-           </property>
-           <property name="mouseTracking">
-            <bool>false</bool>
-           </property>
-           <property name="text">
-            <string>intel P-state scaling driver that realization Intel SpeedStep Technology</string>
-           </property>
-           <property name="textFormat">
-            <enum>Qt::AutoText</enum>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-           <property name="wordWrap">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="checkBox_speedshift">
-           <property name="text">
-            <string>Intel SpeedShift aka Hardware P-states</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="checkBox_turbo_pstates">
-           <property name="whatsThis">
-            <string extracomment="Intel allow p_state drive set CPU to turbo P states"/>
-           </property>
-           <property name="text">
-            <string>Turbo P-states</string>
-           </property>
-           <property name="checked">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_2">
-           <item>
-            <widget class="QSpinBox" name="spinBox_intel_epb">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="whatsThis">
-              <string extracomment="0 (highest performance) to 15 (highest energy savings)"/>
-             </property>
-             <property name="maximum">
-              <number>15</number>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="label">
-             <property name="text">
-              <string>The Intel performance and energy bias hint (EPB) (depraceted)</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-        </layout>
-       </widget>
-      </widget>
       <widget class="QWidget" name="tab_3">
        <attribute name="title">
         <string>Battery time</string>
@@ -349,7 +352,7 @@ p, li { white-space: pre-wrap; }
     <property name="title">
      <string>Файл</string>
     </property>
-    <addaction name="action_exit"/>
+    <addaction name="menu_action_exit"/>
    </widget>
    <addaction name="menu"/>
   </widget>
@@ -359,9 +362,14 @@ p, li { white-space: pre-wrap; }
     <string>jhgjhg</string>
    </property>
   </action>
-  <action name="action_exit">
+  <action name="menu_action_exit">
    <property name="text">
     <string>Выйти</string>
+   </property>
+  </action>
+  <action name="menu_action_sqlitebd">
+   <property name="text">
+    <string>Экспорт SQliteBD в файл</string>
    </property>
   </action>
  </widget>

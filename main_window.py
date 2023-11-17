@@ -3,7 +3,7 @@ import sys
 import logging
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtCore import QTimer, Qt, QCoreApplication
-from PySide6.QtWidgets import QMainWindow, QApplication, QVBoxLayout, QSystemTrayIcon, QMenu
+from PySide6.QtWidgets import QMainWindow, QApplication, QVBoxLayout, QSystemTrayIcon, QMenu, QFileDialog
 from PySide6.QtGui import QIcon, QAction
 
 from widget_rapl import RAPLWidget
@@ -29,7 +29,7 @@ class MainWindow(QMainWindow):
         layout.addWidget(rapl)
         self.ui.tab_rapl.setLayout(layout)
 
-        self.ui.menu.triggered.connect(QCoreApplication.instance().quit)
+        self.ui.menu_action_exit.triggered.connect(QCoreApplication.instance().quit)
 
         # --- Logic --
         self.cpuFrequency = CpuFrequency()
