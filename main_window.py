@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
-import sys
 import logging
+logging.root.setLevel(logging.DEBUG)
+logging.root.addHandler(logging.StreamHandler())
+import sys
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtCore import QTimer, Qt, QCoreApplication
 from PySide6.QtWidgets import QMainWindow, QApplication, QVBoxLayout, QSystemTrayIcon, QMenu, QFileDialog
@@ -12,7 +14,6 @@ import track
 
 _logger = logging.getLogger(__name__)
 _logger.setLevel(logging.DEBUG)
-_logger.addHandler(logging.StreamHandler())
 
 
 class MainWindow(QMainWindow):
